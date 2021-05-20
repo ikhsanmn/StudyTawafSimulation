@@ -25,8 +25,8 @@ class Boid {
     // f[i].y=f[i].x*Math.sin(toRadian(1)) + f[i].y*Math.cos(toRadian(1));//sudut tembereng
 
     var radians = Math.PI; //* getRandomInt(-99,100) / 100;
-    var cx = this.speed * Math.cos( radians ) - this.speed * Math.sin( radians ); 
-    var cy = this.speed * Math.sin( radians ) + this.speed * Math.cos( radians );
+    //var cx = this.speed * Math.cos( radians ) - this.speed * Math.sin( radians ); 
+    //var cy = this.speed * Math.sin( radians ) + this.speed * Math.cos( radians );
     this.velocity = new Victor( cx, cy );
 
     //this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) );//?
@@ -56,13 +56,13 @@ class Boid {
     var targetposition = target.clone();
     var diff = targetposition.subtract(this.position);
     var desired = new Victor(diff.x,diff.y);
-
+    //area buffer seek biar seaknya beda
     if (target.radius) {
       var buffer = target.radius + this.radius + 1;
     } else {
       var buffer = this.radius * 2 + 1;
     }
-
+    //
     var dist = diff.magnitude();
     if (dist < buffer) {
       desired.x = 0;
@@ -78,6 +78,26 @@ class Boid {
     return desired;
   }
 
+   centrifugal( boids ){
+    var sum = new Victor();
+    var count = 0;
+    var distanceFromCenter = this.position.clone().distance(center); 
+    var ax = this.maxSpeed;
+    // for (var j = 0; j < boids.length; j++) {
+    //   var distanceFromCenter = this.position.clone().distance(center); 
+    //   var ax = this.maxS
+    // }
+     if (count > 0) {
+      sum.divide({x:count,y:count});
+      sum.normalize()
+      sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
+      steer = sum.subtract(this.velocity);
+      steer.limitMagnitude(this.maxForce);
+      return steer;
+    } else {
+      return steer;
+    }
+  }
 
   separate( boids ){
     var sum = new Victor();
