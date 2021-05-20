@@ -27,9 +27,9 @@ class Boid {
     var radians = Math.PI; //* getRandomInt(-99,100) / 100;
     //var cx = this.speed * Math.cos( radians ) - this.speed * Math.sin( radians ); 
     //var cy = this.speed * Math.sin( radians ) + this.speed * Math.cos( radians );
-    this.velocity = new Victor( cx, cy );
+    //this.velocity = new Victor( cx, cy );
 
-    //this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) );//?
+    this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) );//?
     //Force and Accel
     this.maxForce = .5;
     //this.acceleration = maxForce / mass;

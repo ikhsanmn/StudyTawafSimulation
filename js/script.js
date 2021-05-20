@@ -27,7 +27,7 @@ console.log(size.width);
 console.log(size.height);
 
 var center = new Victor( size.width / 2 ,size.height / 2 );
-console.log(center);
+console.log(center.x);
 
 
 // Initialize Mouse
@@ -247,6 +247,8 @@ function createBoids() {
     this.y = 0;
   }
 
+  var sx = center.x;
+  var sy = center.y;
   var s11 = 219; // 73
   var s12 = 216; // 72
   var s21 = 219; // 73
@@ -263,29 +265,30 @@ function createBoids() {
 
   // Define wall
   //var surf = new Sides2(); //barrier
-  var walls = [];
+  var sides = [];
   surf = new Sides2(wA,wB);
-  walls.push(surf);
+  sides.push(surf);
   surf = new Sides2(wB,wC);
-  walls.push(surf);
+  sides.push(surf);
   surf = new Sides2(wC,wD);
-  walls.push(surf);
+  sides.push(surf);
   surf = new Sides2(wD,wA);
-  walls.push(surf);
+  sides.push(surf);
   //console.log(sides);
 
    //kaaba walls
-
-  var s = 18;
-  var rA = new Vect3(-s,s,0);
-  var rB = new Vect3(s, s,0);
-  var rC = new Vect3(s,-s,0);
-  var rD = new Vect3(-s, -s,0);
+  var s =18;
+  var sx = center.x;
+  var sy = center.y;
+  var rA = new Vect3(sx,sy,0);
+  var rB = new Vect3(sx+s,sy,0);
+  var rC = new Vect3(sx+s,s+sy,0);
+  var rD = new Vect3(sx,s+sy ,0);
   //console.log(rA);
 
   // Define kaaba //change from sides to walls
   var surf = new Sides2();
-  var sides = [];
+  var walls = [];
   surf = new Sides2(rA,rB);
   walls.push(surf);
   surf = new Sides2(rB,rC);
@@ -296,7 +299,9 @@ function createBoids() {
   walls.push(surf);
 
   console.log(walls);
-  console.log(walls[0]);
+  console.log("tes"+walls[0].p[0].x);
+  console.log("tes"+walls[0].p[0].x.length);
+  console.log(surf.p[0].x);
 
  
   //console.log(sides); 
@@ -380,9 +385,10 @@ function animate() {
       // Update all boids
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
+        drawWalls("walls", walls, "#f00");// 
+        drawWalls("walls", sides, "#f00");//
       }
-      drawWalls("walls", walls, "#f00");// 
-      drawWalls("walls", sides, "#f00");//
+ 
       //console.log(drawWalls("walls", walls, "#f00"));
   }
 }
