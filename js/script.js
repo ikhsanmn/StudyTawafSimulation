@@ -27,7 +27,7 @@ console.log(size.width);
 console.log(size.height);
 
 var center = new Victor( size.width / 2 ,size.height / 2 );
-console.log(center.x);
+console.log("pusat"+center.x);
 
 
 // Initialize Mouse
@@ -137,7 +137,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 250;
+var minBoids = 1;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -277,7 +277,7 @@ function createBoids() {
   //console.log(sides);
 
    //kaaba walls
-  var s =18;
+  var s =50;
   var sx = center.x;
   var sy = center.y;
   var rA = new Vect3(sx,sy,0);
@@ -365,6 +365,7 @@ function animate() {
   // Calc elapsed time since last loop
   now = Date.now();
   elapsed = now - then;
+  //console.log("elapsed"+elapsed);
 
   // FPS Reporting
   fpsReport++;

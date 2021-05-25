@@ -6,7 +6,9 @@ class Boid {
     // Initial Properties
     this.id = boid.id;
     this.position = new Victor( boid.x, boid.y );
-    this.positionT = new Victor(0,0); ///tambahan ikhsan
+    //this.positionD = new Victor(0,0); ///Position degree
+    this.positionTheta = Math.atan2();
+    //this.position
     this.radius = boid.radius * radiusCoefficients[ boid.radiusCoefficient ];
     this.introversionCoefficient = boid.introversionCoefficient;
     this.introversion = boid.introversion * this.introversionCoefficient;
@@ -78,25 +80,33 @@ class Boid {
     return desired;
   }
 
-   centrifugal( boids ){
-    var sum = new Victor();
-    var count = 0;
-    var distanceFromCenter = this.position.clone().distance(center); 
-    var ax = this.maxSpeed;
-    // for (var j = 0; j < boids.length; j++) {
-    //   var distanceFromCenter = this.position.clone().distance(center); 
-    //   var ax = this.maxS
-    // }
-     if (count > 0) {
-      sum.divide({x:count,y:count});
-      sum.normalize()
-      sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
-      steer = sum.subtract(this.velocity);
-      steer.limitMagnitude(this.maxForce);
-      return steer;
+  //this must edited to seek center canvas target position
+   circularMotion( target ){
+    var targetposition = center;//transform({x:center.x ,y:center.y});
+    center.divide({x:2,y:2});
+    var diff =targetposition.subtract(this.position);
+    var desired = new Victor(diff.x,diff.y);
+    if (target.radius) {
+      var buffer = target.radius + this.radius + 1;
     } else {
-      return steer;
+      var buffer = this.radius * 2 + 1;
     }
+
+
+    var dist = diff.magnitude();
+    if (dist < buffer) {
+      desired.x = 0;
+      desired.y = 0;
+    } else if ( dist <= 100 ) {
+      desired.normalize();
+      desired.divide({x:this.maxSpeed * dist / 100,y:this.maxSpeed * dist / 100});
+    } else {
+      desired.limitMagnitude(this.maxSpeed);
+    }
+    desired.subtract(this.velocity);
+    desired.limitMagnitude(this.maxForce);
+    return desired;
+    
   }
 
   separate( boids ){
@@ -189,6 +199,7 @@ class Boid {
   flock() {
 
     // Get Forces
+
     var alignForce = this.align(boids);
     if ( mouseSeek ) var mouseForce = this.seek(mouse.position);
     var separateForce = this.separate(boids);
@@ -197,6 +208,7 @@ class Boid {
 
 
     // Weight Forces
+    var circularWeight = 1;
     var alignWeight = 1.2;
     if ( mouseSeek ) var mouseWeight = .2;
     var separateWeight = 1;
@@ -205,6 +217,9 @@ class Boid {
 
 
     // Apply forces
+    //
+    
+    //
     this.applyForce( alignForce, alignWeight );
     if ( mouseSeek ) this.applyForce( mouseForce, mouseWeight );
     this.applyForce( separateForce, separateWeight );
@@ -232,10 +247,12 @@ class Boid {
     this.position = this.position.add(this.velocity);
 
     // Collision detection if enabled
+    //console.log(this.position)
     if ( collisions ) { this.detectCollision(); }
 
     // Check edges for walls or overruns
     this.edgeCheck();
+    this.kaabaCheck()
 
   }
 
@@ -245,6 +262,19 @@ class Boid {
       this.wallBounce();
     } else {
       this.borderWrap();
+    }
+  }
+
+  kaabaCheck() {
+     if (this.position.x < 0) {
+      this.position.x = document.body.clientWidth;
+    } else if ( this.position.x > document.body.clientWidth ) {
+      this.position.x = 0;
+    }
+    if (this.position.y < 0) {
+      this.position.y = document.body.clientHeight;
+    } else if ( this.position.y > document.body.clientHeight ) {
+      this.position.y = 0;
     }
   }
 
@@ -363,7 +393,10 @@ class Boid {
   draw(){
     c.beginPath();
     //c.rect(0,0,document.body.clientWidth,document.body.clientHeight);
+    // console.log("x"+this.position.x);
+    // console.log("y"+this.position.y);
     var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
+    console.log(rr);
     c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2, false);
 
     //c.arc(endPosition.x, endPosition.y, this.radius, 0, Math.PI * 2, false);
