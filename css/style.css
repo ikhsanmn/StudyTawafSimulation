@@ -82,7 +82,8 @@ table{
   max-width: 100%;
   max-width: 100vw;
   overflow: hidden;
-  background-color: #222;
+  /*background-color: #222;*/
+  background-color:   #C0C0C0;
   color: #fafafa;
   color: rgba(255,255,255,.9);
   font-family: arial;

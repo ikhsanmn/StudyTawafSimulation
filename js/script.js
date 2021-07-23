@@ -137,7 +137,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 1;//1000;
+var minBoids = 500;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -199,15 +199,18 @@ function createBoids() {
     var racismCoefficient = getCoefficient() / 100;
     var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
 
-    // Generate random coords
-    var x = Math.ceil(Math.random()* ( size.width - ( radius * 2 ) ) ) + ( radius );
-    var y = Math.ceil(Math.random()* ( size.height - ( radius * 2 ) ) ) + ( radius );
+    // Generate random coords MUST FROM 50 TO SIZE CANVAS OR WALL MASJIDIL
+    if (x > 0 && y < 0 && x > 0 && y < 0){
+
+    }
+    var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+    var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
     // For subsequent boids, check for collisions and generate new coords if exist
     if ( i !== 0 ) {
       for (var j = 0; j < boids.length; j++ ) {
         if ( getDistance(x, y, boids[j].x, boids[j].y) - ( radius + boids[j].radius ) < 0 ) {
-          x = Math.ceil(Math.random()* ( size.width - ( radius * 2 ) ) ) + ( radius );
-          y = Math.ceil(Math.random()* ( size.height - ( radius * 2 ) ) ) + ( radius );
+          x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+          y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
           j = -1;
         }
       }
@@ -288,20 +291,20 @@ function createBoids() {
 
   // Define kaaba //change from sides to walls
   var surf = new Sides2();
-  var walls = [];
+  var wallsKaaba = [];
   surf = new Sides2(rA,rB);
-  walls.push(surf);
+  wallsKaaba.push(surf);
   surf = new Sides2(rB,rC);
-  walls.push(surf);
+  wallsKaaba.push(surf);
   surf = new Sides2(rC,rD);
-  walls.push(surf);
+  wallsKaaba.push(surf);
   surf = new Sides2(rD,rA);
-  walls.push(surf);
+  wallsKaaba.push(surf);
 
-  console.log(walls);
-  console.log("tes"+walls[0].p[0].x);
-  console.log("tes"+walls[0].p[0].x.length);
-  console.log(surf.p[0].x);
+  //console.log(wallsKaaba);
+  // console.log("tes"+walls[0].p[0].x);
+  // console.log("tes"+walls[0].p[0].x.length);
+  // console.log(surf.p[0].x);
 
  
   //console.log(sides); 
@@ -317,9 +320,6 @@ function drawWalls(id,surfs,color){
       for(var j = 0; j < M; j++) {
         var s = surfs[i];
         var rr = transform({x: s.p[j].x, y: s.p[j].y});
-        //console.log(s.p[j]);
-        //console.log(s);
-        //console.log(rr);
         if(j == 0) {
           cx.moveTo(rr.x, rr.y);
         } else {
@@ -359,6 +359,9 @@ function transform(r) {
  * Setup and call animation function
  *
  */
+// var t=0,dt=1;
+
+
 function animate() {
   requestAnimationFrame(animate);
 
@@ -381,18 +384,31 @@ function animate() {
       then = now - (elapsed % fpsInterval);
       // Drawing Code
 
+    function simulate() {
       c.clearRect(0, 0, canvas.width, canvas.height);
-
       // Update all boids
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
-        drawWalls("walls", walls, "#f00");// 
+        drawWalls("walls", wallsKaaba, "#f00");// 
         drawWalls("walls", sides, "#f00");//
       }
+      //t+=dt;
+      //console.log(t);
+    }
+    simulate();
  
       //console.log(drawWalls("walls", walls, "#f00"));
   }
 }
+
+function clear(){
+  var ca = arguments[0];
+  var ctx = ca.getContext("2d");
+  ctx.beginPath();
+  ctx.clearRect(0,0,size.width,size.height);
+  ctx.closePath();
+}
+
 
 // Setup animation
 var stop = false;
@@ -400,7 +416,6 @@ var frameCount = 0;
 var fps, fpsInterval, startTime, now, then, elapsed;
 var fpsNum = document.getElementById('fps-number');
 var fpsReport = 58;
-
 /**
  * Start Animation of Boids
  *
