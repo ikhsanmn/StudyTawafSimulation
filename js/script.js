@@ -137,7 +137,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 500;//1000;
+var minBoids = 200;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -284,9 +284,9 @@ function createBoids() {
   var sx = center.x;
   var sy = center.y;
   var rA = new Vect3(sx,sy,0);
-  var rB = new Vect3(sx+s,sy,0);
-  var rC = new Vect3(sx+s,s+sy,0);
-  var rD = new Vect3(sx,s+sy ,0);
+  var rB = new Vect3(sx-s,sy,0);
+  var rC = new Vect3(sx-s,sy-s,0);
+  var rD = new Vect3(sx,sy-s ,0);
   //console.log(rA);
 
   // Define kaaba //change from sides to walls

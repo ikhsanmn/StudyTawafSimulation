@@ -97,20 +97,26 @@ class Boid {
     for (var i = 0; i < boids.length; i++) {
       //var distanceFromCenter = this.position.distance(center);
       //this.radians += this.velocity;\
-      //var distanceFromCenter =this.position.clone().distance(center); 
-     var distanceFromCenter =this.distanceFromCenter; 
-      var path= 2*Math.PI* distanceFromCenter;
+      //var distanceFromCenter =this.position.clone().distance(center);
+      var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
+      var distanceFromCenter =this.position.clone().distance(center); 
+      var pathCircular = 2*Math.PI* distanceFromCenter;
       var theta = 1;
       
       if ( (distanceFromCenter > 0) ) {
-        angular = 2*Math.PI*t;
-        velocityTangen = distanceFromCenter*angular;
-        vect.x = -Math.sin(theta) * this.distanceFromCenter;
-        vect.y =  Math.cos(theta) * this.distanceFromCenter;
-
+        // angular = 2*Math.PI*t;
+        // velocityTangen = distanceFromCenter*angular;
+        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
+        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
+        
+        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
+        var thisposition = this.position.clone();
+        var diff = thisposition.subtract(center);
+        diff.normalize();
+        diff.divide({x:distanceFromCenter,y:distanceFromCenter});
+        sum.subtract(diff);
         t+=dt
       }
-      sum.add(vect);
     }
     if (t > 0) {
       sum.divide({x:t,y:t});
@@ -215,23 +221,26 @@ class Boid {
   flock() {
 
     // Get Forces
-    //var circularMotionForce = this.circularMotion(boids);
-
+    
     var alignForce = this.align(boids);
     //console.log(alignForce);
 
-
+    //var circularMotionForce = this.circularMotion(boids);
+    
     // this.position.x=this.position.x*Math.cos(toRadian(1)) - this.position.x*Math.sin(toRadian(1));//sudut tembereng
     // this.position.y=this.position.y*Math.sin(toRadian(1)) + this.position.x*Math.cos(toRadian(1));//sudut tembereng
     if ( mouseSeek ) var mouseForce = this.seek(center);//mouse.position
     //if ( mouseSeek ) var mouseForce = this.seek(mouse.position);//mouse.position
     var separateForce = this.separate(boids);
     var cohesionForce = this.cohesion(boids);
+
+    var circularMotionForce = this.circularMotion(boids);
+
     if ( walls ) var avoidWallsForce = this.avoidWalls();
 
 
     // Weight Forces
-    var circularWeight = 1;
+    var circularWeight = 0.25;
     var alignWeight = 1; //1.2
     if ( mouseSeek ) var mouseWeight = 0.5; //.2
     var separateWeight = 1;
@@ -240,14 +249,14 @@ class Boid {
 
 
     // Apply forces
-    //
-    //this.applyForce(circularMotionForce, circularWeight );
-    //
-
+    
     this.applyForce( alignForce, alignWeight );
     if ( mouseSeek ) this.applyForce( mouseForce, mouseWeight );
     this.applyForce( separateForce, separateWeight );
     this.applyForce( cohesionForce, cohesionWeight );
+    //
+    this.applyForce(circularMotionForce, circularWeight );
+    //
     if ( walls && avoidWallsForce ) this.applyForce( avoidWallsForce, avoidWallsWeight );
 
   }
@@ -312,6 +321,7 @@ class Boid {
 
 
   wallBounce() {
+    
     if (this.position.x <= this.radius) {
       this.position.x = this.radius;
     } else if ( this.position.x >= document.body.clientWidth - this.radius) {
