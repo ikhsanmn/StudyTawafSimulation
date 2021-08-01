@@ -19,10 +19,12 @@ class Boid {
     this.racismCoefficient = boid.racismCoefficient;
     this.racism = boid.racism * boid.racismCoefficient;
     this.color = boid.color;
-    this.mass = (4/3) * Math.PI * Math.pow( this.radius,3 );
+    this.volume = (4/3) * Math.PI * Math.pow( this.radius,3 );
 
-    this.distanceFromCenter = Math.sqrt(Math.pow(this.position) - Math.pow(center));
-    this.frequency;
+    //this.angle = Math.PI;
+    this.angle;
+    this.angle2 = 3/2*Math.PI;    this.distanceFromCenter = Math.sqrt(Math.pow(this.position) - Math.pow(center));
+    this.frequency = 0 ;
     this.radians = Math.random()* Math.PI*2;
     //console.log(this.distanceFromCenter);
 
@@ -41,7 +43,7 @@ class Boid {
     this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) );//?
     //Force and Accel
     this.maxForce = .5;
-    //this.acceleration = maxForce / mass;
+    this.acceleration = 0;
 
   }
 ////////////// meta transform
@@ -90,7 +92,94 @@ class Boid {
   }
 
   //this must edited to seek center canvas target position
-   circularMotion( boids ){
+   centripetal( boids ){
+    var sum = new Victor();
+    var steer = new Victor();
+    var u = new Victor(100,100);
+    var t = 0,dt=1;
+    for (var i = 0; i < boids.length; i++) {
+      //var distanceFromCenter = this.position.distance(center);
+      //this.radians += this.velocity;\
+      //var distanceFromCenter =this.position.clone().distance(center);
+      var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
+      var distanceFromCenter =this.position.clone().distance(center); 
+      var pathCircular = 2*Math.PI* distanceFromCenter;
+      var theta = 1;
+
+
+        if ( (distanceFromCenter > 0 &&distanceFromCenter < 50) ) {
+        // angular = 2*Math.PI*t;
+        // velocityTangen = distanceFromCenter*angular;
+        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
+        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
+        
+        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
+
+        var thisposition = this.position.clone();
+        var diff = thisposition.subtract(center);
+        var diffVelocity = diff;
+        diff.normalize();
+        diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
+        //diffVelocity.normalize();
+
+        sum.add(diff);
+        //sum.add(diff);
+        t+=dt
+        }else{
+
+        }
+      
+        //area outher
+        if ( (distanceFromCenter > 300 &&distanceFromCenter < 1500) ) {
+        // angular = 2*Math.PI*t;
+        // velocityTangen = distanceFromCenter*angular;
+        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
+        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
+        
+        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
+
+        var thisposition = this.position.clone();
+        var diff = thisposition.subtract(center);
+
+        // var diff;
+        // diff.x = center.x + (this.distanceFromCenter *Math.sin(toRadian(1)));
+        // diff.y = center.y + (this.distanceFromCenter *Math.sin(toRadian(1)));
+
+        var diffVelocity = diff;
+       // console.log(diff);
+        diff.normalize();
+        diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
+        //diffVelocity.normalize();
+
+        //
+        // var thisvelocity = this.velocity.clone();
+        // var thisvelocitySquare = Math.pow(thisvelocity,2);
+        // var diff2 = thisvelocitySquare.divide(distanceFromCenter); 
+        // sum.add(diff2);
+        //
+
+
+        sum.subtract(diff);
+        //sum.add(diff);
+        t+=dt
+        }else{
+
+        }
+      //}
+      
+    }
+    if (t > 0) {
+      sum.divide({x:t,y:t});
+      sum.normalize()
+      sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
+      steer = sum.subtract(this.velocity);
+      steer.limitMagnitude(this.maxForce);
+      return steer;
+    } else {
+      return steer;
+    }
+  }
+  centrifugal( boids ){
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
@@ -103,7 +192,7 @@ class Boid {
       var pathCircular = 2*Math.PI* distanceFromCenter;
       var theta = 1;
       
-      if ( (distanceFromCenter > 0) ) {
+      if ( (distanceFromCenter > 0 && distanceFromCenter < 50 ) ) {
         // angular = 2*Math.PI*t;
         // velocityTangen = distanceFromCenter*angular;
         // vect.x = -Math.sin(theta) * this.distanceFromCenter;
@@ -112,9 +201,13 @@ class Boid {
         //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
         var thisposition = this.position.clone();
         var diff = thisposition.subtract(center);
+        var diffVelocity = diff;
         diff.normalize();
-        diff.divide({x:distanceFromCenter,y:distanceFromCenter});
-        sum.subtract(diff);
+        diff.divide({x:desiredtoCenter.x,y:desiredtoCenter.y});
+        //diffVelocity.normalize();
+
+        //sum.subtract(diff);
+        sum.add(diff);
         t+=dt
       }
     }
@@ -129,6 +222,7 @@ class Boid {
       return steer;
     }
   }
+
 
   separate( boids ){
     var sum = new Victor();
@@ -233,14 +327,18 @@ class Boid {
     //if ( mouseSeek ) var mouseForce = this.seek(mouse.position);//mouse.position
     var separateForce = this.separate(boids);
     var cohesionForce = this.cohesion(boids);
+    ////
+    var centrifugalForce = this.centrifugal(boids);
 
-    var circularMotionForce = this.circularMotion(boids);
-
+    var centripetalForce = this.centripetal(boids);
+    ////
     if ( walls ) var avoidWallsForce = this.avoidWalls();
 
 
     // Weight Forces
-    var circularWeight = 0.25;
+    var centrifugalWeight = 0.2;
+    var centripetalWeight = 0.2;
+    
     var alignWeight = 1; //1.2
     if ( mouseSeek ) var mouseWeight = 0.5; //.2
     var separateWeight = 1;
@@ -255,19 +353,67 @@ class Boid {
     this.applyForce( separateForce, separateWeight );
     this.applyForce( cohesionForce, cohesionWeight );
     //
-    this.applyForce(circularMotionForce, circularWeight );
+    //this.applyForce(centrifugalForce, centrifugalWeight );
+    this.applyForce(centripetalForce, centripetalWeight );
+    
+    //
+    var distanceFromCenter =this.position.clone().distance(center);
+    //area of tawaf 
+    // if ( (distanceFromCenter > 300 &&distanceFromCenter < 1500) ) {
+    //   this.applyForce(centripetalForce, centripetalWeight );
+    // }
+    // //
+    // if ( (distanceFromCenter > 50 &&distanceFromCenter < 300) ) {
+
+    // }
+    
     //
     if ( walls && avoidWallsForce ) this.applyForce( avoidWallsForce, avoidWallsWeight );
 
   }
 
+
+
   //acceleration
   applyForce( force, coefficient ) {
     if ( ! coefficient ) { var coefficient = 1; }
-    force.multiply({x:coefficient,y:coefficient});
+    force.divide({x:coefficient,y:coefficient});
     this.velocity.add(force);
     this.velocity.limitMagnitude( this.maxSpeed );
   }
+
+
+    //calculate
+  circularPath(){
+
+    //this.angle  -=this.velocity;
+    //this.angle2 +=this.velocity;
+
+    if(this.angle2 >= 2*Math.PI){
+      this.angle2 = 0;
+      this.frequency = this.frequency + 1
+    }
+    // var x = tmpShape.x+(this.distanceFromCenter*Math.sin(this.angle*(Math.PI/180)));
+    // var y = tmpShape.y+(this.distanceFromCenter*Math.cos(this.angle*(Math.PI/180)));
+    if(i==0) this.angle += 5;
+    else this.angle += 10;
+
+    if (this.angle > 360) {
+      this.angle = 0; 
+    };
+    var t = 0;
+    var dt = 1;
+    t+=dt
+    if (t>1){
+      //this.position.x = 
+    
+    // rr.x=this.position.x*Math.cos(toRadian(1)) - this.position.y*Math.sin(toRadian(1));//sudut tembereng
+    // rr.y=this.position.x*Math.sin(toRadian(1)) + this.position.y*Math.cos(toRadian(1));//sudut tembereng
+    this.position.x = this.position.x + (this.distanceFromCenter *Math.sin(toRadian(1)));
+    this.position.y = this.position.y + (this.distanceFromCenter *Math.cos(toRadian(1)));
+    }
+  }
+
 
 
   nextPosition() {
@@ -276,9 +422,13 @@ class Boid {
     this.flock();
 
     // Update position
-    //this.velocity = this.position.add(this.acceleration);
+    //this.velocity = this.velocity.add(this.acceleration);
     this.position = this.position.add(this.velocity);
+
     // var distanceFromCenter = this.position.distance(center);
+
+
+    //this.circularPath();
 
     // console.log("jarak ke pusat"+distanceFromCenter);
     function rungeKutta(){
@@ -320,6 +470,8 @@ class Boid {
   }
 
 
+
+
   wallBounce() {
     
     if (this.position.x <= this.radius) {
@@ -339,12 +491,73 @@ class Boid {
       this.velocity.invertX();
     }
     /////
-    if ( this.distanceFromHorKaaba() <= this.radius  ) {
-      this.velocity.invertY();
-    }
-    if ( this.distanceFromVertKaaba() <= this.radius  ) {
-      this.velocity.invertX();
-    }
+        /// rules diagram
+    // if (f[i].x > 0 && f[i].y < 0){
+    //   f[i].vx=-f[i].vx;
+    //   f[i].vy=f[i].vy;
+    // }else if(f[i].x > 0 && f[i].y > 0){
+    //   f[i].vx=-f[i].vx;
+    //   f[i].vy=-f[i].vy;
+    // }else if(f[i].x < 0 && f[i].y > 0){
+    //   f[i].vx=f[i].vx;
+    //   f[i].vy=-f[i].vy;
+    // }else if(f[i].x < 0 && f[i].y < 0){
+    //   f[i].vx=f[i].vx;
+    //   f[i].vy=f[i].vy;
+    // }
+  //   var s =50;
+  // var sx = center.x;
+  // var sy = center.y;
+  // var rA = new Vect3(sx,sy,0);
+  // var rB = new Vect3(sx-s,sy,0);
+  // var rC = new Vect3(sx-s,sy-s,0);
+  // var rD = new Vect3(sx,sy-s ,0);
+  // console.log(rA.x);
+    // var down = rA.distance(rB);
+    // var left = rB.distance(rC);
+    // var right = rC.distance(rD);
+    // var pp = rD.distance(rA);
+    // console.log("down="+down);
+
+    // if (this.position.x <= this.radius) {
+    //   this.position.x = this.radius;
+    // } else if ( this.distanceFromCenter.x = this.position.x  + this.radius) {
+    //   this.distanceFromCenter.x = this.position.x  + this.radius;
+    // }
+    // if (this.position.y <= this.radius) {
+    //   this.position.y = this.radius;
+    // } else if ( this.distanceFromCenter.y = this.position.y  + this.radius ) {
+    //   this.distanceFromCenter.y = this.position.x  + this.radius;
+    // }
+    // if (this.position.x <= this.radius) {
+    //   this.position.x = this.radius;
+    // } else if ( this.position.x = (rB.x-rC.x) - this.radius) {
+    //   this.position.x = (rB.x-rC.x) - this.radius;
+    // }
+    // if (this.position.y <= this.radius) {
+    //   this.position.y = this.radius;
+    // } else if ( this.position.y = (rB.y-rC.y) - this.radius ) {
+    //   this.position.y = (rB.y-rC.y) - this.radius;
+    // }
+
+
+    // if ( this.distanceFromHorWall() <= this.radius  ) {
+    //   this.velocity.invertY();
+    // }
+    // if ( this.distanceFromVertWall() <= this.radius  ) {
+    //   this.velocity.invertX();
+    // }
+
+
+
+
+    //////
+    // if ( this.distanceFromHorKaaba() <= this.radius  ) {
+    //   this.velocity.invertY();
+    // }
+    // if ( this.distanceFromVertKaaba() <= this.radius  ) {
+    //   this.velocity.invertX();
+    // }
     /////
   }
 
@@ -388,14 +601,14 @@ class Boid {
   ///tambahan ikhsan 
   distanceFromHorKaaba(){
     if (this.velocity.y > 0){
-      return walls.y - (this.position.y);
+      return wallskaaba.y - (this.position.y);
     } else {
       return this.position.y
     }
   }
   distanceFromVertKaaba(){
     if (this.velocity.x > 0) {
-      return walls.x - (this.position.x);
+      return wallsKaaba.x - (this.position.x);
     } else {
       return this.position.x;
     }
@@ -418,6 +631,17 @@ class Boid {
     if ( this.distanceFromVertWall() <= this.radius  ) {
       this.velocity.invertX();
     }
+
+    // if (this.position.x <= this.radius) {
+    //   this.position.x = this.radius;
+    // } else if ( this.position.x >= rB.x - this.radius && this.position.x <= rA.x - this.radius  ) {
+    //   this.position.x = rA.x - this.radius;
+    // }
+    // if (this.position.y <= this.radius) {
+    //   this.position.y = this.radius;
+    // } else if ( this.position.y >= rC.y - this.radius && this.position.y <= rA.y - this.radius ) {
+    //   this.position.y = rC.y - this.radius;
+    // }
     /// rules diagram
     // if (f[i].x > 0 && f[i].y < 0){
     //   f[i].vx=-f[i].vx;
@@ -436,7 +660,6 @@ class Boid {
   }
 
 
-  //calculate
 
 
 
@@ -450,8 +673,15 @@ class Boid {
     // console.log("y"+this.position.y);
     var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
     //console.log(rr);
-    c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2, false);
+    c.arc(center.x,center.y, 10,0,  Math.PI*2, false);
+    //c.arc(this.position[0].x, this.position[0].y, this.radius, 0, Math.PI * 2);
 
+    c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
+
+
+    //
+
+    //
     //c.arc(endPosition.x, endPosition.y, this.radius, 0, Math.PI * 2, false);
     //c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
 
@@ -474,13 +704,32 @@ class Boid {
   //   c.stroke();
   //   c.closePath();
   // }
-
+  startLine(){
+    c.strokeStyle = "#ff0000";
+    c.beginPath();
+    c.moveTo(center.x-50,center.y-50);
+    c.lineTo(center.x,center.y);
+    c.moveTo(center.x,center.y);
+    c.lineTo(1020,820);
+    c.moveTo(center.x-10,center.y);
+    c.lineTo(988,820);
+    c.moveTo(center.x,center.y-10);
+    c.lineTo(1050,820);
+    //c.fillStyle = "#ff0000";
+    c.fill();
+    c.stroke();
+  }
   
   update() { 
     this.transform();// tambahan ikhsan
     this.draw();
+
+    ///draw all boundary except kaaba
+    this.startLine();
+    
+    this.circularPath();
+    ///
     this.nextPosition();
-    //this.drawArrow();
 
     //this.draw(); //awalnya disini
   }

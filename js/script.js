@@ -126,6 +126,15 @@ Victor.prototype.limitMagnitude = function (max) {
   }
 
 };
+/**
+ * Convert angle to radian
+ *
+ * @param  int | sudut | angle that convert
+ */
+
+function toRadian (sudut) {
+  return sudut * (Math.PI / 180);
+}
 
 /*--- end Helper Functions ----*/
 
@@ -137,7 +146,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 200;//1000;
+var minBoids = 400;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -200,7 +209,7 @@ function createBoids() {
     var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
 
     // Generate random coords MUST FROM 50 TO SIZE CANVAS OR WALL MASJIDIL
-    if (x > 0 && y < 0 && x > 0 && y < 0){
+    if ( (center.x -50) < x < center.x && (center.y -50) < y < center.y){
 
     }
     var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
@@ -287,7 +296,7 @@ function createBoids() {
   var rB = new Vect3(sx-s,sy,0);
   var rC = new Vect3(sx-s,sy-s,0);
   var rD = new Vect3(sx,sy-s ,0);
-  //console.log(rA);
+  console.log(rA.x);
 
   // Define kaaba //change from sides to walls
   var surf = new Sides2();
@@ -302,9 +311,10 @@ function createBoids() {
   wallsKaaba.push(surf);
 
   //console.log(wallsKaaba);
-  // console.log("tes"+walls[0].p[0].x);
+  console.log("tes"+wallsKaaba[0].p[0].x);
   // console.log("tes"+walls[0].p[0].x.length);
   // console.log(surf.p[0].x);
+
 
  
   //console.log(sides); 
@@ -393,14 +403,19 @@ function animate() {
         drawWalls("walls", sides, "#f00");//
       }
       //t+=dt;
-      //console.log(t);
-    }
+         }
     simulate();
  
       //console.log(drawWalls("walls", walls, "#f00"));
   }
 }
 
+console.log("test pos draw walls"+surf.p[0].x );
+console.log("test pos draw walls"+surf );
+console.log("test pos draw walls"+surf.p[1].x );
+console.log("test pos draw walls"+wallsKaaba );
+console.log(surf.p[0].x );
+console.log(surf);
 function clear(){
   var ca = arguments[0];
   var ctx = ca.getContext("2d");
@@ -614,7 +629,7 @@ function updateQuickness(value) {
   }
 }
 
-// Racism
+// Racisms
 var racismControlContainer = document.getElementById('racism-control-container');
 var racismInput = document.getElementById('racism');
 racismInput.onchange = function() {
