@@ -146,7 +146,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 400;//1000;
+var minBoids = 150;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -180,7 +180,7 @@ var colors = [
 var diversity = 8;
 var quickness = 1;
 var introversion = .5;
-var racism = 0;
+var racism = 5; // 0 awalnya
 var speedIndex;
 if ( size.width / 160 < 5 ) {
   speedIndex = 1.25;//5 DEFAULT
@@ -209,9 +209,10 @@ function createBoids() {
     var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
 
     // Generate random coords MUST FROM 50 TO SIZE CANVAS OR WALL MASJIDIL
-    if ( (center.x -50) < x < center.x && (center.y -50) < y < center.y){
-
-    }
+    // if ( distanceFromCenter > 300 && distanceFromCenter < 1500){
+    //   var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+    //   var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+    // }
     var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
     var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
     // For subsequent boids, check for collisions and generate new coords if exist
@@ -310,8 +311,9 @@ function createBoids() {
   surf = new Sides2(rD,rA);
   wallsKaaba.push(surf);
 
-  //console.log(wallsKaaba);
+  console.log(wallsKaaba);
   console.log("tes"+wallsKaaba[0].p[0].x);
+  console.log();
   // console.log("tes"+walls[0].p[0].x.length);
   // console.log(surf.p[0].x);
 
@@ -443,10 +445,8 @@ function startAnimating() {
   animate();
 }
 
-//Initalize program
-createBoids();
-//drawWalls("home", walls, "#f00");
-startAnimating(60);
+
+
 
 /*---- end Loop and Initializing ----*/
 
@@ -482,6 +482,20 @@ addEventListener('resize', function(){
 /*---- end Event Listeners ----*/
 
 /*---- Inputs ----*/
+
+var buttonStart = document.getElementById('Start');
+buttonStart.onclick = function(){
+//Initalize program
+createBoids();
+//drawWalls("home", walls, "#f00");
+startAnimating(60);
+}
+
+
+var buttonStop = document.getElementById('Stop');
+buttonStop.onclick = function(){
+
+}
 
 // Hide Elements on Mobile
 document.getElementById('collisions-mobile').style.display = 'none';
