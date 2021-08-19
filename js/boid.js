@@ -45,6 +45,7 @@ class Boid {
     // Speed & Velocity & Force
     this.maxSpeed = speedIndex * this.quickness;
     this.speed = this.maxSpeed * .5;
+    this.speedangular = this.speed/this.distanceFromCenter;
 
     this.angularVelocity = this.speed/this.distanceFromCenter;
   
@@ -70,6 +71,7 @@ class Boid {
     //
     //Force and Accel
     this.maxForce = .5;
+    this.maxForce2 = .1;
     this.acceleration = new Victor(0,0);
     //this.angularAccel = new Victor(-this.distanceFromCenter*Math.pow(this.angularVelocity,2)*Math.cos(this.angularVelocity),-this.distanceFromCenter*Math.pow(this.angularVelocity,2)*Math.cos(this.angularVelocity));
     this.angularAcceleration;
@@ -153,12 +155,9 @@ class Boid {
         sum.add(diff);
         //sum.add(diff);
         t+=dt
-        }else{
-
         }
-      
-        //area outher
         if ( (distanceFromCenter > 50 && distanceFromCenter <= 300 ) ) {
+        //area outher
         // angular = 2*Math.PI*t;
         // velocityTangen = distanceFromCenter*angular;
         // vect.x = -Math.sin(theta) * this.distanceFromCenter;
@@ -181,7 +180,7 @@ class Boid {
         // diff.y = center.y + (this.distanceFromCenter *Math.sin(toRadian(1)));
         
         const diffVelocity = diff;
-       // console.log(diff);
+        // console.log(diff);
         diff.normalize();
         diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
         //diffVelocity.normalize();
@@ -200,7 +199,6 @@ class Boid {
         //sum.add(diff);
         t+=dt
         }else{
-          //return this.seek(center);
 
         }
       //}
@@ -208,14 +206,20 @@ class Boid {
     }
     if (t > 0) {
       sum.divide({x:t,y:t});
-      sum.normalize()
+      sum.normalize();
       sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
-      steer = sum.subtract(this.velocity);
+      steer = sum.add(this.velocity);
       steer.limitMagnitude(this.maxForce);
       return steer;
     } else {
       return steer;
     }
+    //     if (t > 0) {
+    //   sum.divide({x:t,y:t});
+    //   return this.seek(sum);
+    // } else {
+    //   return sum;
+    // }
   }
   centrifugal( boids ){
     var sum = new Victor();
