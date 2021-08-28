@@ -60,7 +60,8 @@ class Boid {
     //this.velocity = new Victor( this.speed , this.speed  );//?
     //this.velocity = new Victor( this.speed * -Math.sin( radians )*this.distanceFromCenter, this.speed * Math.cos( radians )*this.distanceFromCenter );//?
     
-    this.velocity = new Victor( this.speed , this.speed * Math.sin( radians )  );//?
+    //this.velocity = new Victor( this.speed , this.speed * Math.sin( radians )  );//?
+    this.velocity = new Victor(this.speed*Math.sin(radians), this.speed * Math.cos(radians));
     //this.velocity = new Victor(0,0);
 
     //this.velocity = new Victor(this.distanceFromCenter*this.angularVelocity*Math.sin(this.angularVelocity),this.distanceFromCenter*this.angularVelocity*Math.cos(this.angularVelocity)  );
@@ -132,12 +133,41 @@ class Boid {
       //this.radians += this.velocity;\
       //var distanceFromCenter =this.position.clone().distance(center);
       var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
-      var distanceFromCenter =this.position.clone().distance(center); 
+      var nowPosition = this.position.clone();
+      //console.log(surf.center().x);
+      //console.log("position"+nowPosition.x);
+      //var distanceFromCenter =this.position.clone().distance(surf.center()); 
+      var distanceFromCenter =this.position.clone().distance(center); //hajar aswad
+
+      var centerKaaba = new Victor(surf.center().x,surf.center().y);
+      var distanceFromCenter2 = this.position.clone().distance(centerKaaba)
+      // console.log("center1"+center);
+      // console.log("center2"+surf.center());
+
       var pathCircular = 2*Math.PI* distanceFromCenter;
       var theta = 1;
 
+        // force to make boids to not touch center
+        // if ((rA.x<nowPosition.x<rB.x&&rA.y<nowPosition.y<rB.y)||(rB.x<nowPosition.x<rC.x&&rB.y<nowPosition.x<rC.y)||
+        //   (rC.x<nowPosition.x<rD.x&&rC.y<nowPosition.y<rD.y)||(rD.x<nowPosition.x<rA.x&&rD.y<nowPosition.y<rA.y)){}
 
+        var N = sides.length;
+        for(var j = 0 ; j < N ; j++){
+          //console.log(sides[j]);
+          // var thisposition = this.position.clone();
+          // var diff = thisposition.subtract(sides[i]);
+          // diff.normalize();
+          // diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
+          // //diffVelocity.normalize();
+          // sum.add(diff);
+          // t+=dt
+        }
+        // if( surf  instanceof sides2 ){
+
+        // }
+        
         if ( (distanceFromCenter > 0 &&distanceFromCenter < 50) ) {
+
         // angular = 2*Math.PI*t;
         // velocityTangen = distanceFromCenter*angular;
         // vect.x = -Math.sin(theta) * this.distanceFromCenter;
@@ -156,7 +186,9 @@ class Boid {
         //sum.add(diff);
         t+=dt
         }
-        if ( (distanceFromCenter > 50 && distanceFromCenter <= 300 ) ) {
+        console.log(this.position);
+        //force to area that make boids circular path 
+        if ( (distanceFromCenter > 50 && distanceFromCenter <= 500 ) ) {
         //area outher
         // angular = 2*Math.PI*t;
         // velocityTangen = distanceFromCenter*angular;
@@ -167,36 +199,14 @@ class Boid {
 
         var thisposition = this.position.clone();
         var diff = thisposition.subtract(center);
-        // this.radians += this.velocity0;
-        // this.x = this.position.x + this.velocity0.x;
-        // this.y = this.position.y + this.velocity0.y;
-        // var test = new Victor (this.x,this.y);
-        // var diff2 = thisposition.add(test);
-
-
-
-        // var diff;
-        // diff.x = center.x + (this.distanceFromCenter *Math.sin(toRadian(1)));
-        // diff.y = center.y + (this.distanceFromCenter *Math.sin(toRadian(1)));
-        
+ 
         const diffVelocity = diff;
-        // console.log(diff);
+
         diff.normalize();
         diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
-        //diffVelocity.normalize();
-        //diff2.normalize();
 
-
-        //
-        // var thisvelocity = this.velocity.clone();
-        // var thisvelocitySquare = Math.pow(thisvelocity,2);
-        // var diff2 = thisvelocitySquare.divide(distanceFromCenter); 
-        // sum.add(diff2);
-        //
-
-        //sum.add(diff2);
         sum.subtract(diff);
-        //sum.add(diff);
+
         t+=dt
         }else{
 

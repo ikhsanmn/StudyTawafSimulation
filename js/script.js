@@ -146,7 +146,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 150;//1000;
+var minBoids = 1;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -310,6 +310,14 @@ function createBoids() {
   wallsKaaba.push(surf);
   surf = new Sides2(rD,rA);
   wallsKaaba.push(surf);
+  surf = new Sides2(rD,rC);
+
+  //make center var surf
+
+
+  console.log(surf.center().x);
+  console.log(surf.center());
+  console.log(surf.strval());
 
   console.log(wallsKaaba);
   console.log("tes"+wallsKaaba[0].p[0].x);
@@ -404,11 +412,8 @@ function animate() {
         drawWalls("walls", wallsKaaba, "#f00");// 
         drawWalls("walls", sides, "#f00");//
       }
-      //t+=dt;
-         }
+    }
     simulate();
- 
-      //console.log(drawWalls("walls", walls, "#f00"));
   }
 }
 
@@ -494,7 +499,7 @@ startAnimating(60);
 
 var buttonStop = document.getElementById('Stop');
 buttonStop.onclick = function(){
-
+ c.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 // Hide Elements on Mobile
@@ -703,7 +708,8 @@ with(taIn.style){
   height="230px";
   overflowY = "scroll";
 }
-
+ console.log("center1"+center);
+console.log("center2"+"("+surf.center().x+","+surf.center().y+")");
 
 
 /*---- end Inputs ----*/

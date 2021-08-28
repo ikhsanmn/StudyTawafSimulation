@@ -24,6 +24,8 @@ class Sides2 {
 		var s = "(";
 		s += this.p[0].strval() + ", ";
 		s += this.p[1].strval() + ", ";
+		// s += this.p[2].strval() + ", ";
+		// s += this.p[3].strval() + ", ";
 		s += ")";
 		return s;
 	}
@@ -37,6 +39,8 @@ class Sides2 {
 		}
 		p0 = Vect3.div(p0, N);
 		return p0;
+
+
 	}
 
 }
