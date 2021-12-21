@@ -108,11 +108,14 @@ function gaussian(mean, stdev) {
        if(retval > 0)
            return retval;
        return -retval;
+       console.log("tes retval"+retval);
    }
 }
-var getCoefficient = gaussian(50, 9);
-var getQuicknessCoefficient = gaussian(75,7.5);
 
+var getCoefficient = gaussian(50, 9); //(50,9)
+var getQuicknessCoefficient = gaussian(75,7.5); //(75,7.5)
+console.log("koef1"+getCoefficient());
+console.log("koef1"+getQuicknessCoefficient());
 /**
  * Add Limit Magnitude function to Victor objects
  *
@@ -146,7 +149,7 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*/
-var minBoids = 1;//1000;
+var minBoids = 100;//1000;
 var numBoids = minBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -164,7 +167,7 @@ if ( size.width / 288 > 5 ) {
 } else {
   radius = size.width / 288;
 }
-var radiusCoefficients = [.5,.6,.7,.8,1];
+var radiusCoefficients = [.5,.6,.7,.8,.9,1];
 
 // Boid Attributes
 var colors = [
@@ -177,10 +180,14 @@ var colors = [
   '#f4e841',
   '#42ebf4'
 ];
+
+var colorsBlack = [
+  '#000000'
+];
 var diversity = 8;
 var quickness = 1;
 var introversion = .5;
-var racism = 5; // 0 awalnya
+var racism = 5; // 0 awalnya coba 5
 var speedIndex;
 if ( size.width / 160 < 5 ) {
   speedIndex = 1.25;//5 DEFAULT
@@ -242,6 +249,23 @@ function createBoids() {
       introversion: introversion,
       introversionCoefficient: introversionCoefficient
     } ) );
+
+    // Add new black Boid to array 
+    // boids.push( new Boid( {
+    //   id: i,
+    //   x: x,
+    //   y: y,
+    //   speedIndex: speedIndex,
+    //   radius: radius,
+    //   radiusCoefficient: radiusCoefficient,
+    //   quickness: quickness,
+    //   quicknessCoefficient: quicknessCoefficient,
+    //   color: colorsBlack,
+    //   racism: racism,
+    //   racismCoefficient: ,
+    //   introversion: introversion,
+    //   introversionCoefficient: introversionCoefficient
+    // } ) );
   }
 
 }
@@ -290,7 +314,7 @@ function createBoids() {
   //console.log(sides);
 
    //kaaba walls
-  var s =50;
+  var s = 50 
   var sx = center.x;
   var sy = center.y;
   var rA = new Vect3(sx,sy,0);
@@ -298,6 +322,18 @@ function createBoids() {
   var rC = new Vect3(sx-s,sy-s,0);
   var rD = new Vect3(sx,sy-s ,0);
   console.log(rA.x);
+
+  // var s = 100
+  // var s2 = 150 
+  // var sx = center.x;
+  // var sy = center.y;
+  // var rA = new Vect3(sx-s,sy-s2,0);
+  // var rB = new Vect3(sx+s,sy+s2 ,0);
+  // var rC = new Vect3(sx+s,sy-s2,0);
+  // var rD = new Vect3(sx-s,sy+s2 ,0);
+  // console.log(rA.x);
+
+
 
   // Define kaaba //change from sides to walls
   var surf = new Sides2();
@@ -310,16 +346,20 @@ function createBoids() {
   wallsKaaba.push(surf);
   surf = new Sides2(rD,rA);
   wallsKaaba.push(surf);
-  surf = new Sides2(rD,rC);
+  surf = new Sides2(rA,rC); 
+  var vecKaaba = Victor.fromArray(wallsKaaba);
+  console.log("tes"+vecKaaba);
 
   //make center var surf
 
 
-  console.log(surf.center().x);
-  console.log(surf.center());
+  console.log("x="+surf.center().x);
+  console.log("y="+surf.center().y);
+
+  console.log("koordinat tengah"+surf.center());
   console.log(surf.strval());
 
-  console.log(wallsKaaba);
+  console.log("arrayof kaaba"+wallsKaaba);
   console.log("tes"+wallsKaaba[0].p[0].x);
   console.log();
   // console.log("tes"+walls[0].p[0].x.length);
@@ -420,7 +460,10 @@ function animate() {
 console.log("test pos draw walls"+surf.p[0].x );
 console.log("test pos draw walls"+surf );
 console.log("test pos draw walls"+surf.p[1].x );
+
 console.log("test pos draw walls"+wallsKaaba );
+console.log("test pos draw walls1"+wallsKaaba[0].p[0] );
+
 console.log(surf.p[0].x );
 console.log(surf);
 function clear(){
@@ -449,7 +492,18 @@ function startAnimating() {
   startTime = then;
   animate();
 }
+/**
+ * Stop Animation of Boids
+ *
+ */
 
+ function stopAnimating() {
+  if(fps != null) { var fps = null; }
+  fpsInterval = 1000 / fps;
+  then = Date.now();
+  startTime = then;
+  //animate();
+}
 
 
 
@@ -500,6 +554,7 @@ startAnimating(60);
 var buttonStop = document.getElementById('Stop');
 buttonStop.onclick = function(){
  c.clearRect(0, 0, canvas.width, canvas.height);
+ stopAnimating(0);
 }
 
 // Hide Elements on Mobile
@@ -713,3 +768,20 @@ console.log("center2"+"("+surf.center().x+","+surf.center().y+")");
 
 
 /*---- end Inputs ----*/
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "myusername",
+  password: "mypassword"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  /*Create a database named "mydb":*/
+  con.query("CREATE DATABASE mydb", function (err, result) {
+    if (err) throw err;
+    console.log("Database created");
+  });
+});

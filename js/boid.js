@@ -137,20 +137,22 @@ class Boid {
       //console.log(surf.center().x);
       //console.log("position"+nowPosition.x);
       //var distanceFromCenter =this.position.clone().distance(surf.center()); 
+      var vecKaaba = Victor.fromObject(wallsKaaba);
+      //console.log(vecKaaba);
       var distanceFromCenter =this.position.clone().distance(center); //hajar aswad
+      //var distanceFromCenter2 = this.position.clone().distance()
 
       var centerKaaba = new Victor(surf.center().x,surf.center().y);
-      var distanceFromCenter2 = this.position.clone().distance(centerKaaba)
+      //console.log(centerKaaba);
+      var distanceFromCenter2 = this.position.clone().distance(centerKaaba);
+
       // console.log("center1"+center);
       // console.log("center2"+surf.center());
 
       var pathCircular = 2*Math.PI* distanceFromCenter;
       var theta = 1;
 
-        // force to make boids to not touch center
-        // if ((rA.x<nowPosition.x<rB.x&&rA.y<nowPosition.y<rB.y)||(rB.x<nowPosition.x<rC.x&&rB.y<nowPosition.x<rC.y)||
-        //   (rC.x<nowPosition.x<rD.x&&rC.y<nowPosition.y<rD.y)||(rD.x<nowPosition.x<rA.x&&rD.y<nowPosition.y<rA.y)){}
-
+   
         var N = sides.length;
         for(var j = 0 ; j < N ; j++){
           //console.log(sides[j]);
@@ -162,21 +164,13 @@ class Boid {
           // sum.add(diff);
           // t+=dt
         }
-        // if( surf  instanceof sides2 ){
-
-        // }
+     
         
-        if ( (distanceFromCenter > 0 &&distanceFromCenter < 50) ) {
+        if ( (distanceFromCenter2 > 0 &&distanceFromCenter2 < 50) ) {
 
-        // angular = 2*Math.PI*t;
-        // velocityTangen = distanceFromCenter*angular;
-        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
-        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
-        
-        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
-
+      
         var thisposition = this.position.clone();
-        var diff = thisposition.subtract(center);
+        var diff = thisposition.subtract(centerKaaba);
         var diffVelocity = diff;
         diff.normalize();
         diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
@@ -186,19 +180,12 @@ class Boid {
         //sum.add(diff);
         t+=dt
         }
-        console.log(this.position);
+        //console.log(this.position);
         //force to area that make boids circular path 
-        if ( (distanceFromCenter > 50 && distanceFromCenter <= 500 ) ) {
-        //area outher
-        // angular = 2*Math.PI*t;
-        // velocityTangen = distanceFromCenter*angular;
-        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
-        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
-        
-        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
+        if ( (distanceFromCenter2 > 50 && distanceFromCenter2 <= 500 ) ) {
 
         var thisposition = this.position.clone();
-        var diff = thisposition.subtract(center);
+        var diff = thisposition.subtract(centerKaaba);
  
         const diffVelocity = diff;
 
@@ -206,6 +193,28 @@ class Boid {
         diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
 
         sum.subtract(diff);
+
+        t+=dt
+        }else{
+
+        }
+        if ( (distanceFromCenter2 > 50 && distanceFromCenter2 <= 500 ) ) {
+
+        var thisposition = this.position.clone();
+        var diff = thisposition.subtract(centerKaaba);
+        //var diff2 = thisposition.subtract(centerKaaba);
+ 
+        //const diffVelocity = diff;
+        //const diffVelocity = Math.sqrt(Math.pow(diff,2))+(Math.pow(diff2,2));
+
+        diff.normalize();
+        diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
+        sum.subtract(diff);
+
+        // diffVelocity.normalize();
+        // diffVelocity.multiply({x:distanceFromCenter,y:distanceFromCenter});
+
+        // sum.subtract(diffVelocity);
 
         t+=dt
         }else{
@@ -782,10 +791,16 @@ class Boid {
     //var rr = transform({x:this.x, y:this.y}); // tambahan ikhsan transformasi
     
     //console.log(rr);
-    c.arc(center.x,center.y, 10,0,  Math.PI*2, false);
+    //c.arc(center.x,center.y, 10,0,  Math.PI*2, false);
+    //c.arc(surf.center().x,surf.center().y, 10,0,  Math.PI*2, false);
     //c.arc(this.position[0].x, this.position[0].y, this.radius, 0, Math.PI * 2);
-
     c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
+    //c.moveTo(rr.x,rr.y);
+    //c.lineTo(desired.x,desired.y);
+    //c.lineTo(target.x,target.y);
+    
+    //console.log(surf.center().x+" "+surf.center().y);
+
 
 
     //
@@ -797,7 +812,10 @@ class Boid {
     c.fillStyle = this.color;
     c.fill();
     //c.stroke();
-    c.closePath();
+    // c.moveTo(rr.x,rr.y);
+    // c.lineTo(surf.center().x,surf.center().y);
+    // c.stroke();
+    // c.closePath();
   }
 
 
