@@ -114,8 +114,7 @@ function gaussian(mean, stdev) {
 
 var getCoefficient = gaussian(50, 9); //(50,9)
 var getQuicknessCoefficient = gaussian(75,7.5); //(75,7.5)
-console.log("koef1"+getCoefficient());
-console.log("koef1"+getQuicknessCoefficient());
+
 /**
  * Add Limit Magnitude function to Victor objects
  *
@@ -148,9 +147,15 @@ var walls = true;
 var mouseSeek = false;
 var collisions = false;
 
-/*---- How much Boids ----*/
-var minBoids = 100;//1000;
+/*---- How much Boids ----*///120
+var minBoids = 70;//1000;
 var numBoids = minBoids;
+
+var agroBoids = 20;//1000;
+var numAgBoids = agroBoids;
+
+var blackBoids = 20;
+var numBlBoids =blackBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
 //   numBoids = maxBoids;
@@ -172,7 +177,7 @@ var radiusCoefficients = [.5,.6,.7,.8,.9,1];
 // Boid Attributes
 var colors = [
   '#4286f4',
-  '#f4416a',
+  '#7df442',
   '#41f4a0',
   '#f9f9f9',
   '#a341f4',
@@ -184,10 +189,23 @@ var colors = [
 var colorsBlack = [
   '#000000'
 ];
+
+var colorsRed = [
+  '#FF0000'
+];
+
+var colorsYellow = [
+  ' #FFFF00'
+];
+
 var diversity = 8;
+
 var quickness = 1;
+var agroQuickness = 1.5;
+var blackQuickness = 0.75;
+
 var introversion = .5;
-var racism = 5; // 0 awalnya coba 5
+var racism = 1; // 0 awalnya coba 5
 var speedIndex;
 if ( size.width / 160 < 5 ) {
   speedIndex = 1.25;//5 DEFAULT
@@ -196,6 +214,7 @@ if ( size.width / 160 < 5 ) {
 } else {
   speedIndex = size.width / 180;
 }
+var maxForceAggro = 0.4;
 
 // Create Boids Array
 var boids = [];
@@ -248,7 +267,9 @@ function createBoids() {
       racismCoefficient: racismCoefficient,
       introversion: introversion,
       introversionCoefficient: introversionCoefficient
+      //maxForce: maxForce
     } ) );
+
 
     // Add new black Boid to array 
     // boids.push( new Boid( {
@@ -269,6 +290,110 @@ function createBoids() {
   }
 
 }
+
+function agressiveBoids() {
+
+  // Instantiate all Boids
+  for ( i = 0; i < numAgBoids; i++ ) {
+
+    // Generate introversion coefficient
+    var introversionCoefficient = getCoefficient() / 100;
+    var quicknessCoefficient = getQuicknessCoefficient() / 100;
+    var racismCoefficient = getCoefficient() / 100;
+    var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
+
+    // Generate random coords MUST FROM 50 TO SIZE CANVAS OR WALL MASJIDIL
+    // if ( distanceFromCenter > 300 && distanceFromCenter < 1500){
+    //   var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+    //   var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+    // }
+    var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+    var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+    // For subsequent boids, check for collisions and generate new coords if exist
+    if ( i !== 0 ) {
+      for (var j = 0; j < boids.length; j++ ) {
+        if ( getDistance(x, y, boids[j].x, boids[j].y) - ( radius + boids[j].radius ) < 0 ) {
+          x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+          y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+          j = -1;
+        }
+      }
+    }
+
+    // Add new Boid to array
+    boids.push( new Boid( {
+      id: i,
+      x: x,
+      y: y,
+      speedIndex: speedIndex,
+      radius: radius,
+      radiusCoefficient: radiusCoefficient,
+      quickness: agroQuickness,
+      quicknessCoefficient: quicknessCoefficient,
+      color: colorsRed,
+      racism: racism,
+      racismCoefficient: racismCoefficient,
+      introversion: introversion,
+      introversionCoefficient: introversionCoefficient,
+      maxForce: 0.25
+    } ) );
+
+  }
+
+}
+
+function slowBoids() {
+
+  // Instantiate all Boids
+  for ( i = 0; i < numBlBoids; i++ ) {
+
+    // Generate introversion coefficient
+    var introversionCoefficient = getCoefficient() / 100;
+    var quicknessCoefficient = getQuicknessCoefficient() / 100;
+    var racismCoefficient = getCoefficient() / 100;
+    var radiusCoefficient = Math.floor(Math.random() * radiusCoefficients.length);
+
+    // Generate random coords MUST FROM 50 TO SIZE CANVAS OR WALL MASJIDIL
+    // if ( distanceFromCenter > 300 && distanceFromCenter < 1500){
+    //   var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+    //   var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+    // }
+    var x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+    var y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+    // For subsequent boids, check for collisions and generate new coords if exist
+    if ( i !== 0 ) {
+      for (var j = 0; j < boids.length; j++ ) {
+        if ( getDistance(x, y, boids[j].x, boids[j].y) - ( radius + boids[j].radius ) < 0 ) {
+          x = Math.ceil(Math.random()* ( getRandomInt(center.x+50,size.width) - ( radius * 2 ) ) ) + ( radius );//size.width
+          y = Math.ceil(Math.random()* ( getRandomInt(center.y+50,size.height) - ( radius * 2 ) ) ) + ( radius );//size.height
+          j = -1;
+        }
+      }
+    }
+
+    // Add new Boid to array
+    boids.push( new Boid( {
+      id: i,
+      x: x,
+      y: y,
+      speedIndex: speedIndex,
+      radius: radius,
+      radiusCoefficient: radiusCoefficient,
+      quickness: blackQuickness,
+      quicknessCoefficient: quicknessCoefficient,
+      color: colorsBlack,
+      racism: racism,
+      racismCoefficient: racismCoefficient,
+      introversion: introversion,
+      introversionCoefficient: introversionCoefficient
+      //maxForce: maxForce
+    } ) );
+
+  }
+
+}
+
+
 
 /**
  * function draw walls kaaba
@@ -311,7 +436,7 @@ function createBoids() {
   sides.push(surf);
   surf = new Sides2(wD,wA);
   sides.push(surf);
-  //console.log(sides);
+
 
    //kaaba walls
   var s = 50 
@@ -321,7 +446,7 @@ function createBoids() {
   var rB = new Vect3(sx-s,sy,0);
   var rC = new Vect3(sx-s,sy-s,0);
   var rD = new Vect3(sx,sy-s ,0);
-  console.log(rA.x);
+
 
   // var s = 100
   // var s2 = 150 
@@ -331,7 +456,7 @@ function createBoids() {
   // var rB = new Vect3(sx+s,sy+s2 ,0);
   // var rC = new Vect3(sx+s,sy-s2,0);
   // var rD = new Vect3(sx-s,sy+s2 ,0);
-  // console.log(rA.x);
+
 
 
 
@@ -447,6 +572,7 @@ function animate() {
     function simulate() {
       c.clearRect(0, 0, canvas.width, canvas.height);
       // Update all boids
+
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
         drawWalls("walls", wallsKaaba, "#f00");// 
@@ -545,8 +671,10 @@ addEventListener('resize', function(){
 var buttonStart = document.getElementById('Start');
 buttonStart.onclick = function(){
 //Initalize program
+var id = event.target.id;
 createBoids();
-//drawWalls("home", walls, "#f00");
+agressiveBoids();
+slowBoids();
 startAnimating(60);
 }
 
@@ -703,6 +831,46 @@ function updateQuickness(value) {
   }
 }
 
+// //Red Speed
+// var speedControlContainer = document.getElementById('Rspeed-control-container');
+// var speedInput = document.getElementById('Rspeed');
+// speedInput.onchange = function() {
+//   quickness = this.value / 10 + .5;
+//   updateQuickness(quickness);
+// }
+// var speedMobile = document.getElementById('Rspeed-mobile');
+// speedMobile.onclick = function() {
+//   document.getElementById('mobile-boids-controls').style.display = 'none';
+//   speedControlContainer.classList.toggle('show');
+// }
+// function updateQuickness(value) {
+//   for (var i=0; i<boids.length; i++) {
+//     boids[i].quickness = value * boids[i].quicknessCoefficient;
+//     boids[i].maxSpeed = speedIndex * boids[i].quickness;
+//   }
+// }
+
+// //Black Speed
+// var speedControlContainer = document.getElementById('speed-control-container');
+// var speedInput = document.getElementById('speed');
+// speedInput.onchange = function() {
+//   quickness = this.value / 10 + .5;
+//   updateQuickness(quickness);
+// }
+// var speedMobile = document.getElementById('speed-mobile');
+// speedMobile.onclick = function() {
+//   document.getElementById('mobile-boids-controls').style.display = 'none';
+//   speedControlContainer.classList.toggle('show');
+// }
+// function updateQuickness(value) {
+//   for (var i=0; i<boids.length; i++) {
+//     boids[i].quickness = value * boids[i].quicknessCoefficient;
+//     boids[i].maxSpeed = speedIndex * boids[i].quickness;
+//   }
+// }
+
+
+
 // Racisms
 var racismControlContainer = document.getElementById('racism-control-container');
 var racismInput = document.getElementById('racism');
@@ -768,20 +936,3 @@ console.log("center2"+"("+surf.center().x+","+surf.center().y+")");
 
 
 /*---- end Inputs ----*/
-var mysql = require('mysql');
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "myusername",
-  password: "mypassword"
-});
-
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  /*Create a database named "mydb":*/
-  con.query("CREATE DATABASE mydb", function (err, result) {
-    if (err) throw err;
-    console.log("Database created");
-  });
-});

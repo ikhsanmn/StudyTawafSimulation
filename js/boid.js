@@ -61,17 +61,20 @@ class Boid {
     //this.velocity = new Victor( this.speed * -Math.sin( radians )*this.distanceFromCenter, this.speed * Math.cos( radians )*this.distanceFromCenter );//?
     
     //this.velocity = new Victor( this.speed , this.speed * Math.sin( radians )  );//?
-    this.velocity = new Victor(this.speed*Math.sin(radians), this.speed * Math.cos(radians));
+    //this.velocity = new Victor(this.speed*Math.sin(radians), this.speed * Math.cos(radians));
+    this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) )
     //this.velocity = new Victor(0,0);
 
     //this.velocity = new Victor(this.distanceFromCenter*this.angularVelocity*Math.sin(this.angularVelocity),this.distanceFromCenter*this.angularVelocity*Math.cos(this.angularVelocity)  );
     this.velocity0 = new Victor(Math.cos(this.radians)*this.distanceFromCenter,Math.sin(this.radians)*this.distanceFromCenter);
+
     //this.velocity = new Victor(this.distanceFromCenter*Math.sin(this.angularVelocity),this.distanceFromCenter*Math.cos(this.angularVelocity)  );
     //this.velocity = new Victor(this.distanceFromCenter*this.angularVelocity*-Math.sin(45),this.distanceFromCenter*this.angularVelocity*Math.cos(45)  );
     //this.velocity = new Victor(this.angularVelocity*-Math.sin(this.angularVelocity),this.angularVelocity*Math.cos(this.angularVelocity));//?
     //
     //Force and Accel
-    this.maxForce = .5;
+    // this.maxForce = 0.25//.5;
+    this.maxForce = 0.25//.5;
     this.maxForce2 = .1;
     this.acceleration = new Victor(0,0);
     //this.angularAccel = new Victor(-this.distanceFromCenter*Math.pow(this.angularVelocity,2)*Math.cos(this.angularVelocity),-this.distanceFromCenter*Math.pow(this.angularVelocity,2)*Math.cos(this.angularVelocity));
@@ -112,6 +115,7 @@ class Boid {
       desired.x = 0;
       desired.y = 0;
     } else if ( dist <= 100 ) {
+      //normalize and multiply
       desired.normalize();
       desired.divide({x:this.maxSpeed * dist / 100,y:this.maxSpeed * dist / 100});
     } else {

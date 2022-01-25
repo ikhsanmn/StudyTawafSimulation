@@ -104,6 +104,17 @@ table{
   position: relative;
 }
 
+.label-wrapper {
+  z-index: 1;
+  position:absolute;
+  width: 100%;
+  height: 15px;
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+
+
+
 #boids {
   position: absolute;
   height: 100%;
@@ -129,6 +140,23 @@ table{
   padding: 20px 0;
   text-transform: uppercase;
 }
+
+#boids-varian {
+  position: relative;
+  top: 0px;
+  right: 0px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  padding: 20px 0;
+  text-transform: uppercase;
+}
+
+
+
 
 .boids-control {
   box-sizing: border-box;
@@ -184,6 +212,8 @@ input::-moz-focus-inner {
   margin-top: 10px;
   margin-bottom: 2px;
 }
+
+
 .boids-control-checkbox label {
   width: 15px;
   height: 15px;
@@ -332,6 +362,10 @@ input::-moz-focus-inner {
   #boids-controls-container {
     padding: 16px 0;
   }
+  #boids-varian {
+    padding: 16px 0;
+  }
+
   .boids-control {
     display: block;
     position: absolute;
