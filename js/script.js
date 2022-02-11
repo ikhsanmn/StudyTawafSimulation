@@ -201,8 +201,8 @@ var colorsYellow = [
 var diversity = 8;
 
 var quickness = 1;
-var agroQuickness = 1.5;
-var blackQuickness = 0.75;
+var agroQuickness = 1.25;
+var blackQuickness = 0.5;
 
 var introversion = .5;
 var racism = 1; // 0 awalnya coba 5
@@ -335,7 +335,7 @@ function agressiveBoids() {
       racismCoefficient: racismCoefficient,
       introversion: introversion,
       introversionCoefficient: introversionCoefficient,
-      maxForce: 0.25
+      //maxForce: maxForceAggro
     } ) );
 
   }
@@ -571,8 +571,9 @@ function animate() {
 
     function simulate() {
       c.clearRect(0, 0, canvas.width, canvas.height);
-      // Update all boids
 
+     // t++
+      // Update all boids
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
         drawWalls("walls", wallsKaaba, "#f00");// 

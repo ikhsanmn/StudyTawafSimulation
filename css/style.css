@@ -141,19 +141,7 @@ table{
   text-transform: uppercase;
 }
 
-#boids-varian {
-  position: relative;
-  top: 0px;
-  right: 0px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: auto;
-  padding: 20px 0;
-  text-transform: uppercase;
-}
+
 
 
 

@@ -5,17 +5,14 @@ class Boid {
 
     // Initial Properties
     this.id = boid.id;
-    //this.position = new Victor( boid.x*Math.cos( radians ), boid.y*Math.sin( radians ) );
+
     this.position = new Victor( boid.x, boid.y );
     this.positionTheta = Math.atan2();
     this.distanceFromCenter0 = this.position.distance(center);
     this.coordinateO = new Victor (0,0);
     this.x ;
     this.y ;
-   
-    //this.positionD = new Victor(0,0); ///Position degree
 
-    //this.position
     this.radius = boid.radius * radiusCoefficients[ boid.radiusCoefficient ];
     this.introversionCoefficient = boid.introversionCoefficient;
     this.introversion = boid.introversion * this.introversionCoefficient;
@@ -26,21 +23,18 @@ class Boid {
     this.color = boid.color;
     this.volume = (4/3) * Math.PI * Math.pow( this.radius,3 );
 
-
-    //this.angle = Math.PI;
+;
     this.angle;
     this.angle2 = 3/2*Math.PI;    
 
-    //this.distanceFromCenter = Math.sqrt(Math.pow(this.position) - Math.pow(center));
+
     this.distanceFromCenter = this.position.clone().distance(center);
     this.distanceFromCenter = this.position.distance(center);
-    //this.distanceFromCenterV = new Victor(this.distanceFromCenter*Math.cos(this.angularVelocity),this.distanceFromCenter*Math.sin(this.angularVelocity-Math.PI));
+
     this.positionC = new Victor( this.distanceFromCenter*Math.cos(this.angularVelocity),this.distanceFromCenter*Math.sin(this.angularVelocity));
     this.theta = 0; 
     this.frequency = 0 ;
     this.radians =  Math.PI*2;//*Math.random();
-
-    //console.log(this.distanceFromCenter);
 
     // Speed & Velocity & Force
     this.maxSpeed = speedIndex * this.quickness;
@@ -48,51 +42,20 @@ class Boid {
     this.speedangular = this.speed/this.distanceFromCenter;
 
     this.angularVelocity = this.speed/this.distanceFromCenter;
-  
-    // f[i].x=f[i].x*Math.cos(toRadian(1)) - f[i].y*Math.sin(toRadian(1));//sudut tembereng
-    // f[i].y=f[i].x*Math.sin(toRadian(1)) + f[i].y*Math.cos(toRadian(1));//sudut tembereng
-
+ 
     var radians = Math.PI; //* getRandomInt(-99,100) / 100;
-    //var cx = this.speed * Math.cos( radians ) - this.speed * Math.sin( radians ); 
-    //var cy = this.speed * Math.sin( radians ) + this.speed * Math.cos( radians );
-    //this.velocity = new Victor( cx, cy );
-
-    //this.velocity = new Victor( this.speed , this.speed  );//?
-    //this.velocity = new Victor( this.speed * -Math.sin( radians )*this.distanceFromCenter, this.speed * Math.cos( radians )*this.distanceFromCenter );//?
-    
-    //this.velocity = new Victor( this.speed , this.speed * Math.sin( radians )  );//?
-    //this.velocity = new Victor(this.speed*Math.sin(radians), this.speed * Math.cos(radians));
+ 
     this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) )
-    //this.velocity = new Victor(0,0);
-
-    //this.velocity = new Victor(this.distanceFromCenter*this.angularVelocity*Math.sin(this.angularVelocity),this.distanceFromCenter*this.angularVelocity*Math.cos(this.angularVelocity)  );
     this.velocity0 = new Victor(Math.cos(this.radians)*this.distanceFromCenter,Math.sin(this.radians)*this.distanceFromCenter);
-
-    //this.velocity = new Victor(this.distanceFromCenter*Math.sin(this.angularVelocity),this.distanceFromCenter*Math.cos(this.angularVelocity)  );
-    //this.velocity = new Victor(this.distanceFromCenter*this.angularVelocity*-Math.sin(45),this.distanceFromCenter*this.angularVelocity*Math.cos(45)  );
-    //this.velocity = new Victor(this.angularVelocity*-Math.sin(this.angularVelocity),this.angularVelocity*Math.cos(this.angularVelocity));//?
-    //
-    //Force and Accel
-    // this.maxForce = 0.25//.5;
+  //Force and Accel
     this.maxForce = 0.25//.5;
     this.maxForce2 = .1;
     this.acceleration = new Victor(0,0);
-    //this.angularAccel = new Victor(-this.distanceFromCenter*Math.pow(this.angularVelocity,2)*Math.cos(this.angularVelocity),-this.distanceFromCenter*Math.pow(this.angularVelocity,2)*Math.cos(this.angularVelocity));
     this.angularAcceleration;
   }
 ////////////// meta transform
     transform() {
-    // var X = (r.x - xmin) / (xmax - xmin) * (XMAX - XMIN);
-    // X += XMIN;
-    // var Y = (r.y - ymin) / (ymax - ymin) * (YMAX - YMIN);
-    // Y += YMIN;
-    // return {x: X, y: Y};
-    //koordinat -360 sampai 360 height  -360 sampai 360 width
     var realPosition = transform({x:this.position.x ,y:this.position.y});
-
-    // this.position.x = ((this.position.x-0)/(720-0))*size.width;
-    // this.position.y = -(this.position.y-0)/(720-0)*size.height+size.height;
-    //transform
 
   }
 ////////////////
@@ -133,26 +96,13 @@ class Boid {
     var u = new Victor(100,100);
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
-      //var distanceFromCenter = this.position.distance(center);
-      //this.radians += this.velocity;\
-      //var distanceFromCenter =this.position.clone().distance(center);
       var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
       var nowPosition = this.position.clone();
-      //console.log(surf.center().x);
-      //console.log("position"+nowPosition.x);
-      //var distanceFromCenter =this.position.clone().distance(surf.center()); 
       var vecKaaba = Victor.fromObject(wallsKaaba);
-      //console.log(vecKaaba);
       var distanceFromCenter =this.position.clone().distance(center); //hajar aswad
-      //var distanceFromCenter2 = this.position.clone().distance()
 
       var centerKaaba = new Victor(surf.center().x,surf.center().y);
-      //console.log(centerKaaba);
       var distanceFromCenter2 = this.position.clone().distance(centerKaaba);
-
-      // console.log("center1"+center);
-      // console.log("center2"+surf.center());
-
       var pathCircular = 2*Math.PI* distanceFromCenter;
       var theta = 1;
 
@@ -170,7 +120,7 @@ class Boid {
         }
      
         
-        if ( (distanceFromCenter2 > 0 &&distanceFromCenter2 < 50) ) {
+        if ( (distanceFromCenter2 > 0 &&distanceFromCenter2 < 50) ) {//distanceFromCenter2 > 0 &&distanceFromCenter2 < 50
 
       
         var thisposition = this.position.clone();
@@ -178,13 +128,10 @@ class Boid {
         var diffVelocity = diff;
         diff.normalize();
         diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
-        //diffVelocity.normalize();
-
+    
         sum.add(diff);
-        //sum.add(diff);
         t+=dt
         }
-        //console.log(this.position);
         //force to area that make boids circular path 
         if ( (distanceFromCenter2 > 50 && distanceFromCenter2 <= 500 ) ) {
 
@@ -202,28 +149,7 @@ class Boid {
         }else{
 
         }
-        if ( (distanceFromCenter2 > 50 && distanceFromCenter2 <= 500 ) ) {
-
-        var thisposition = this.position.clone();
-        var diff = thisposition.subtract(centerKaaba);
-        //var diff2 = thisposition.subtract(centerKaaba);
- 
-        //const diffVelocity = diff;
-        //const diffVelocity = Math.sqrt(Math.pow(diff,2))+(Math.pow(diff2,2));
-
-        diff.normalize();
-        diff.multiply({x:distanceFromCenter,y:distanceFromCenter});
-        sum.subtract(diff);
-
-        // diffVelocity.normalize();
-        // diffVelocity.multiply({x:distanceFromCenter,y:distanceFromCenter});
-
-        // sum.subtract(diffVelocity);
-
-        t+=dt
-        }else{
-
-        }
+        // 
       //}
       
     }
@@ -237,64 +163,47 @@ class Boid {
     } else {
       return steer;
     }
-    //     if (t > 0) {
-    //   sum.divide({x:t,y:t});
-    //   return this.seek(sum);
-    // } else {
-    //   return sum;
-    // }
   }
-  centrifugal( boids ){
-    var sum = new Victor();
-    var steer = new Victor();
-    var t = 0,dt=1;
-    for (var i = 0; i < boids.length; i++) {
-      //var distanceFromCenter = this.position.distance(center);
-      //this.radians += this.velocity;\
-      //var distanceFromCenter =this.position.clone().distance(center);
-      var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
-      var distanceFromCenter =this.position.clone().distance(center); 
-      var pathCircular = 2*Math.PI* distanceFromCenter;
-      var theta = 1;
-      
-      if ( (distanceFromCenter > 0 && distanceFromCenter < 50 ) ) {
-        // angular = 2*Math.PI*t;
-        // velocityTangen = distanceFromCenter*angular;
-        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
-        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
-        
-        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
-        var thisposition = this.position.clone();
-        var diff = thisposition.subtract(center);
-        var diffVelocity = diff;
-        diff.normalize();
-        diff.divide({x:desiredtoCenter.x,y:desiredtoCenter.y});
-        //diffVelocity.normalize();
 
-        //sum.subtract(diff);
-        sum.add(diff);
-        t+=dt
-      }
-    }
-    if (t > 0) {
-      sum.divide({x:t,y:t});
-      sum.normalize()
-      sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
-      steer = sum.subtract(this.velocity);
-      steer.limitMagnitude(this.maxForce);
-      return steer;
-    } else {
-      return steer;
-    }
-  }
+  // centrifugal( boids ){
+  //   var sum = new Victor();
+  //   var steer = new Victor();
+  //   var t = 0,dt=1;
+  //   for (var i = 0; i < boids.length; i++) {
+  //     var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
+  //     var distanceFromCenter =this.position.clone().distance(center); 
+  //     var pathCircular = 2*Math.PI* distanceFromCenter;
+  //     var theta = 1;
+      
+  //     if ( (distanceFromCenter > 0 && distanceFromCenter < 50 ) ) {
+    
+  //       var thisposition = this.position.clone();
+  //       var diff = thisposition.subtract(center);
+  //       var diffVelocity = diff;
+  //       diff.normalize();
+  //       diff.divide({x:desiredtoCenter.x,y:desiredtoCenter.y});
+  //       sum.add(diff);
+  //       t+=dt
+  //     }
+  //   }
+  //   if (t > 0) {
+  //     sum.divide({x:t,y:t});
+  //     sum.normalize()
+  //     sum.multiply({x:this.maxSpeed,y:this.maxSpeed});
+  //     steer = sum.subtract(this.velocity);
+  //     steer.limitMagnitude(this.maxForce);
+  //     return steer;
+  //   } else {
+  //     return steer;
+  //   }
+  // }
 
     circularMotion( boids ){
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
-      //this.radians += this.velocity;\
-      //var distanceFromCenter =this.position.clone().distance(center);
+
       var desiredtoCenter = Math.pow(this.velocity,2)/distanceFromCenter;
       var distanceFromCenter =this.position.clone().distance(center);
 
@@ -302,23 +211,13 @@ class Boid {
       var theta = 1;
       
       if ( (distanceFromCenter < 50 && distanceFromCenter < 300 ) ) {
-        // angular = 2*Math.PI*t;
-        // velocityTangen = distanceFromCenter*angular;
-        // vect.x = -Math.sin(theta) * this.distanceFromCenter;
-        // vect.y =  Math.cos(theta) * this.distanceFromCenter;
-
-        
-        //accelerationCentripetal = Math.pow(this.velocity,2)/distanceFromCenter
         var thisposition = this.position.clone();
         var thisvelocity = this.velocity.clone();
         var thispositionX = thisposition.x + (distanceFromCenter*Math.sin(toRadian(1)));
         var thispositionY = thisposition.y + (distanceFromCenter*Math.cos(toRadian(1)));
         var diff = thisposition.add(new Victor(thispositionX,thispositionY));
         diff.normalize();
-        //diff.divide({x:desiredtoCenter.x,y:desiredtoCenter.y});
-        //diffVelocity.normalize();
 
-        //sum.subtract(diff);
         sum.add(diff);
         t+=dt
       }
@@ -369,7 +268,7 @@ class Boid {
 
  
   align( boids ) {
-    var neighborDist = 50;
+    var neighborDist = 25;
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
@@ -394,7 +293,7 @@ class Boid {
 
 
   cohesion( boids ) {
-    var neighborDist = 50;
+    var neighborDist = 25;
     var sum = new Victor();
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
@@ -441,14 +340,12 @@ class Boid {
     var separateForce = this.separate(boids);
     var cohesionForce = this.cohesion(boids);
     ///
-    var centrifugalForce = this.centrifugal(boids);
     var centripetalForce = this.centripetal(boids);
     ////
     if ( walls ) var avoidWallsForce = this.avoidWalls();
 
 
     // Weight Forces
-    var centrifugalWeight = 0.2;
     var centripetalWeight = 1;
     var circularWeight = 1;
     //
@@ -492,38 +389,6 @@ class Boid {
 
 
     //calculate
-  circularPath(){
-
-    //this.angle  -=this.velocity;
-    //this.angle2 +=this.velocity;
-
-    if(this.angle2 >= 2*Math.PI){
-      this.angle2 = 0;
-      this.frequency = this.frequency + 1
-    }
-    // var x = tmpShape.x+(this.distanceFromCenter*Math.sin(this.angle*(Math.PI/180)));
-    // var y = tmpShape.y+(this.distanceFromCenter*Math.cos(this.angle*(Math.PI/180)));
-    if(i==0) this.angle += 5;
-    else this.angle += 10;
-
-    if (this.angle > 360) {
-      this.angle = 0; 
-    };
-    // var t = 0;
-    // var dt = 1;
-    // t+=dt
-    // if (t>1){
-    //   //this.position.x = 
-    
-    // // rr.x=this.position.x*Math.cos(toRadian(1)) - this.position.y*Math.sin(toRadian(1));//sudut tembereng
-    // // rr.y=this.position.x*Math.sin(toRadian(1)) + this.position.y*Math.cos(toRadian(1));//sudut tembereng
-    // this.position.x = this.position.x + (this.distanceFromCenter *Math.sin(toRadian(1)));
-    // this.position.y = this.position.y + (this.distanceFromCenter *Math.cos(toRadian(1)));
-    // }
-  }
-
-
-
   nextPosition() {
 
     // Loop through behaviors to apply forces
@@ -532,23 +397,9 @@ class Boid {
     // Update position
     
     this.velocity = this.velocity.add(this.acceleration);
-    // this.radians += this.velocity0;
-    // this.x = this.position.x + this.velocity0.x;
-    // this.y = this.position.y + this.velocity0.y;
+
     this.position = this.position.add(this.velocity);
-    //this.angularVelocity += 0.5;
-    //this.distanceFromCenterV = this.distanceFromCenterV.add(this.angularVelocity);
-    // var t = 0;
-    // var dt = 1;
-    // t+=dt
-    // if (t > 1){
-    // this.position = this.position.add((this.position.x*Math.cos(toRadian(1)) - this.position.y*Math.sin(toRadian(1))),(this.position.x*Math.sin(toRadian(1)) + this.position.y*Math.cos(toRadian(1))));
-    // // var distanceFromCenter = this.position.distance(center);
-    // }
-
-    //this.circularPath();
-
-    // console.log("jarak ke pusat"+distanceFromCenter);
+   
     function rungeKutta(){
 
     }
@@ -786,55 +637,13 @@ class Boid {
 
   draw(){
     c.beginPath();
-    //c.rect(0,0,document.body.clientWidth,document.body.clientHeight);
-    // console.log("x"+this.position.x);
-    // console.log("y"+this.position.y);
-
     //transform the position 
     var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
-    //var rr = transform({x:this.x, y:this.y}); // tambahan ikhsan transformasi
-    
-    //console.log(rr);
-    //c.arc(center.x,center.y, 10,0,  Math.PI*2, false);
-    //c.arc(surf.center().x,surf.center().y, 10,0,  Math.PI*2, false);
-    //c.arc(this.position[0].x, this.position[0].y, this.radius, 0, Math.PI * 2);
     c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
-    //c.moveTo(rr.x,rr.y);
-    //c.lineTo(desired.x,desired.y);
-    //c.lineTo(target.x,target.y);
-    
-    //console.log(surf.center().x+" "+surf.center().y);
-
-
-
-    //
-
-    //
-    //c.arc(endPosition.x, endPosition.y, this.radius, 0, Math.PI * 2, false);
-    //c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
-
     c.fillStyle = this.color;
     c.fill();
-    //c.stroke();
-    // c.moveTo(rr.x,rr.y);
-    // c.lineTo(surf.center().x,surf.center().y);
-    // c.stroke();
-    // c.closePath();
   }
 
-
-  // drawArrow(){
-  //   c.beginPath();
-  //   var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
-  //   var desired = transform({x:this.desiredPosition.x, y:this.desiredPosition.y})
-  //   c.moveto(rr.x, rr.y);
-  //   c.lineto(desired.x,desired.y);
-    
-  //   c.fillStyle = this.color;
-  //   c.fill();
-  //   c.stroke();
-  //   c.closePath();
-  // }
   startLine(){
     c.strokeStyle = "#ff0000";
     c.beginPath();
