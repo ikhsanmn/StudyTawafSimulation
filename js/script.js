@@ -577,7 +577,7 @@ function animate() {
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
         drawWalls("walls", wallsKaaba, "#f00");// 
-        drawWalls("walls", sides, "#f00");//
+        //drawWalls("walls", sides, "#f00");//
       }
     }
     simulate();

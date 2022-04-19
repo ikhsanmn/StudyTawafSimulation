@@ -52,6 +52,8 @@ class Boid {
     this.maxForce2 = .1;
     this.acceleration = new Victor(0,0);
     this.angularAcceleration;
+    this.desiredPosition;
+    this.target;
   }
 ////////////// meta transform
     transform() {
@@ -65,6 +67,7 @@ class Boid {
     var diff = targetposition.subtract(this.position);
     var desired = new Victor(diff.x,diff.y);
     this.desiredPosition = desired;
+    this.target = diff;
 
     //area buffer seek biar seaknya beda
     if (target.radius) {
@@ -268,7 +271,7 @@ class Boid {
 
  
   align( boids ) {
-    var neighborDist = 25;
+    var neighborDist = 25;//50
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
@@ -293,7 +296,7 @@ class Boid {
 
 
   cohesion( boids ) {
-    var neighborDist = 25;
+    var neighborDist = 25;//50
     var sum = new Victor();
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
@@ -642,6 +645,17 @@ class Boid {
     c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
     c.fillStyle = this.color;
     c.fill();
+    c.closePath();
+
+    //debugmode for boids centered 
+    // c.moveTo(rr.x,rr.y);
+    // c.lineTo(center.x,center.y);
+    // c.stroke();
+    //prototype arah
+    // var rr1 = transform({x:this.target.x, y:this.target.y});
+    // c.moveTo(rr.x,rr.y);
+    // c.lineTo(rr1.x,rr1.y);
+
   }
 
   startLine(){
@@ -659,6 +673,14 @@ class Boid {
     c.fill();
     c.stroke();
   }
+
+  drawArrow(){
+    c.strokeStyle = "#ff0000";
+    c.beginPath();
+    c.moveTo(this.position.x,this.position.y);
+    c.lineTo(center.x,center.y);
+    c.stroke();
+  }
   
   update() { 
     //this.transform();// tambahan ikhsan
@@ -670,6 +692,16 @@ class Boid {
     //this.circularPath();
     ///
     this.nextPosition();
+    c.beginPath();
+    //transform the position 
+    // var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
+    // c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
+    // c.fillStyle = this.color;
+    // c.fill();
+    var rr = transform({x:this.position.x, y:this.position.y});
+    moveTo(rr.x,rr.y);
+    lineTo(this.position.x,this.position.y);
+    c.closePath();
 
     //this.draw(); //awalnya disini
   }
