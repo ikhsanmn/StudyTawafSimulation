@@ -7,6 +7,20 @@ class Boid {
     this.id = boid.id;
 
     this.position = new Victor( boid.x, boid.y );
+    this.positionI = new Victor();
+
+    // for loop
+    this.k1 = new Victor();
+    this.k2 = new Victor();
+    this.k3 = new Victor();
+    this.k4 = new Victor();
+    this.bun = new Victor();
+    this.h = new Victor(0.5,0.5);
+    this.half = new Victor(0.5,0.5);
+    this.two = new Victor(2,2);
+    this.perSix = new Victor(1/6,1/6);
+    //
+
     this.positionTheta = Math.atan2();
     this.distanceFromCenter0 = this.position.distance(center);
     this.coordinateO = new Victor (0,0);
@@ -46,6 +60,8 @@ class Boid {
     var radians = Math.PI; //* getRandomInt(-99,100) / 100;
  
     this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) )
+    //vx:(Math.random()*(vmax-(vmin)))+(vmin),   //(Math.random() * (max - min)) + min
+    //vy:(Math.random()*(vmax-(vmin)))+(vmin)
     this.velocity0 = new Victor(Math.cos(this.radians)*this.distanceFromCenter,Math.sin(this.radians)*this.distanceFromCenter);
   //Force and Accel
     this.maxForce = 0.25//.5;
@@ -386,22 +402,52 @@ class Boid {
   applyForce( force, coefficient ) {
     if ( ! coefficient ) { var coefficient = 1; }
     force.divide({x:coefficient,y:coefficient});
+    //var t =0;
+    // var h =0.5;
+    // var k1,k2,k3,k4;
+    // this.acceleration.add(force)
+    // this.velocity.add(this.acceleration);
     this.velocity.add(force);
+    // write function runge kutta  on this
+    //this.velocity
+    // t=+t+1
+    //t+=1
     this.velocity.limitMagnitude( this.maxSpeed );
   }
 
 
     //calculate
   nextPosition() {
-
     // Loop through behaviors to apply forces
     this.flock();
 
     // Update position
-    
-    this.velocity = this.velocity.add(this.acceleration);
 
-    this.position = this.position.add(this.velocity);
+    this.velocity = this.velocity.add(this.acceleration);
+    this.positionI = this.position.add(this.velocity);
+    //console.log(this.positionI);
+    // this.k1 = this.position.add(this.velocity).multiply(this.h);
+    // console.log(this.k1);
+    // this.k2 = this.position.add(this.velocity.add(this.h.subtract(this.half))).add(this.k1.subtract(this.half)).multiply(this.h);
+    // this.k3 = this.position.add(this.velocity.add(this.h.subtract(this.half))).add(this.k2.subtract(this.half)).multiply(this.h);
+    // this.k4 = this.position.add(this.velocity.add(this.h)).add(this.k3).multiply(this.h);
+    // this.bun = this.k1.add(this.k2.multiply(this.two)).add(this.k3.multiply(this.two)).add(this.k4).multiply(this.perSix);
+    // this.positionI = this.position.add(this.bun);
+    // //console.log(this.k1);
+    // // this.positionI = this.position.add()
+    // var test = new Victor();
+    // var u = new Victor(1,3);
+
+    // test = test.add(u).add(u).multiply(h);
+    // console.log(test);
+
+    //this.positionI = this.position + 1/6*(k1+(2*k2)+(2*k3)+k4);
+    //this.position.y = this.position.y.add(this.velocity.y);
+    // k1 = this.position.add(this.velocity).multiply(0.1);
+    // k2 = this.position.add(this.velocity.add(0.1/2)).multiply(k1/2).multiply(0.1);
+    // k3 = this.position.add(this.velocity.add(0.1/2)).multiply(k2/2).multiply(0.1);
+    // k4 = this.position.add(this.velocity.add(0.1)).multiply(k3/2).multiply(0.1);
+    // this.position = this.position + 1/6*(k1+(2*k2)+(2*k3)+k4);
    
     function rungeKutta(){
 
@@ -639,13 +685,37 @@ class Boid {
 
 
   draw(){
-    c.beginPath();
+    //c.beginPath();
     //transform the position 
-    var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
+    var rr = transform({x:this.positionI.x, y:this.positionI.y}); // tambahan ikhsan transformasi
+    var theta = -1*Math.atan2(this.velocity.y,this.velocity.x); + Math.PI /2;
+    var vr = transform({x:this.velocity.x, y:this.velocity.y}); // tambahan ikhsan transformasi
+    ///edit dits for different boids
+    // let x =arguments[0];
+    // let y =arguments[1];
+    // let radius=arguments[2];
+    // let degrees1=arguments[3];
+    // let degress2=arguments[4];
+    let r = this.radius;
+    let sudut1=Math.PI*(0);
+    let sudut2=Math.PI*((2/3)-(1/3));
+    //let theta =-1*Math.atan2(this.velocity.x,this.velocity.y) + Math.PI /2;
+    c.save();
+    c.beginPath();
+    // c.translate(rr.x,rr.y);
+    // //c.rotate(theta);
+    // c.moveTo(0,-r*2);
+    // c.lineTo(r,r*2);
+    // c.lineTo(-r,r*2);
+    // c.lineTo(0,-r*2);
+    
+
+
     c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
     c.fillStyle = this.color;
     c.fill();
     c.closePath();
+    c.restore();
 
     //debugmode for boids centered 
     // c.moveTo(rr.x,rr.y);
@@ -655,6 +725,10 @@ class Boid {
     // var rr1 = transform({x:this.target.x, y:this.target.y});
     // c.moveTo(rr.x,rr.y);
     // c.lineTo(rr1.x,rr1.y);
+    
+    //draw(canvas,rr.x,rr.y,this.velocity.x,this.velocity.y,1,sudut2,sudut1,this.color);
+
+    draw(canvas,rr.x,rr.y,vr.x,vr.y,1,sudut2,sudut1,this.color);
 
   }
 
@@ -684,8 +758,10 @@ class Boid {
   
   update() { 
     //this.transform();// tambahan ikhsan
+    var sudut1=Math.PI*(0);
+    var sudut2=Math.PI*((2/3)-(1/3));
+    //this.draw(rr.x,rr.y,3,sudut1,sudut2);
     this.draw();
-
     ///draw all boundary except kaaba
     this.startLine();
     
@@ -698,9 +774,6 @@ class Boid {
     // c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
     // c.fillStyle = this.color;
     // c.fill();
-    var rr = transform({x:this.position.x, y:this.position.y});
-    moveTo(rr.x,rr.y);
-    lineTo(this.position.x,this.position.y);
     c.closePath();
 
     //this.draw(); //awalnya disini
