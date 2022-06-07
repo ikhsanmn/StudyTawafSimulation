@@ -10,8 +10,12 @@ function draw(){
 	let sudut2=arguments[7];
 	let colored =arguments[8];
 	let r=5; //3
-	let theta=-1*Math.atan2(vy,vx) + Math.PI / 2;//console.log('theta : '+theta);
+	let theta=1*Math.atan2(vy,vx) + Math.PI / 2;//console.log('theta : '+theta);
+	
+	//let theta=-1*Math.atan2(vy,vx) + Math.PI / 2;//console.log('theta : '+theta);
+	
 	//let theta=-1*Math.atan2(vy,vx) + 180 / Math.PI;//console.log('theta : '+theta);
+	
 	ctx.save();
 	ctx.beginPath();
 	ctx.translate(x,y);

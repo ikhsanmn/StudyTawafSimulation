@@ -148,13 +148,13 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*///120
-var minBoids = 70;//1000;
+var minBoids = 60;//1000;
 var numBoids = minBoids;
 
-var agroBoids = 20;//1000;
+var agroBoids = 20;//1000;//20
 var numAgBoids = agroBoids;
 
-var blackBoids = 20;
+var blackBoids = 20;//20
 var numBlBoids =blackBoids;
 // var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
 // if ( numBoids > maxBoids ) {
@@ -208,7 +208,7 @@ var introversion = .5;
 var racism = 1; // 0 awalnya coba 5
 var speedIndex;
 if ( size.width / 160 < 5 ) {
-  speedIndex = 1.25;//5 DEFAULT
+  speedIndex = 1.25;//5 DEFAULT x
 } else if ( size.width / 180 > 8 ) {
   speedIndex = 2.25;//9
 } else {

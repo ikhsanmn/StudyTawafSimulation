@@ -15,10 +15,10 @@ class Boid {
     this.k3 = new Victor();
     this.k4 = new Victor();
     this.bun = new Victor();
-    this.h = new Victor(0.5,0.5);
+    this.h = new Victor(1,1);
     this.half = new Victor(0.5,0.5);
     this.two = new Victor(2,2);
-    this.perSix = new Victor(1/6,1/6);
+    this.Six = new Victor(6,6);
     //
 
     this.positionTheta = Math.atan2();
@@ -60,6 +60,7 @@ class Boid {
     var radians = Math.PI; //* getRandomInt(-99,100) / 100;
  
     this.velocity = new Victor( this.speed * Math.cos( radians ), this.speed * Math.sin( radians ) )
+    //this.velocity = new Victor( this.speed , this.speed )
     //vx:(Math.random()*(vmax-(vmin)))+(vmin),   //(Math.random() * (max - min)) + min
     //vy:(Math.random()*(vmax-(vmin)))+(vmin)
     this.velocity0 = new Victor(Math.cos(this.radians)*this.distanceFromCenter,Math.sin(this.radians)*this.distanceFromCenter);
@@ -418,22 +419,120 @@ class Boid {
 
     //calculate
   nextPosition() {
-    // Loop through behaviors to apply forces
-    this.flock();
 
     // Update position
+    let k1,k2,k3,k4,bun;
+    var positiont= this.position.clone(); 
+    var velocityt = this.velocity.clone();
+    var positiont2= this.position.clone(); 
+    var velocityt2 = this.velocity.clone();
+
+    function u(p,v){
+      var uv = p.add(v);
+      return uv
+    }
+
+    const two = new Victor(2,2);
+    const h = new Victor(0.5,0.5);
+    const p0 = this.position
+
+    var vecP = this.position.toArray();
+    var vecV = this.velocity.toArray();
+    var fLen=1,jLen=1;
+    var upS =[,];
+    for (let i = 0; i < vecP.length; i++) {
+      for (let j = 0; j < vecV.length; j++){
+        upS[i]= vecP[i]+vecV[i];
+      }
+    }
+    
+    // upS[0]=vecP[0]+vec[0];
+    // upS[1]=vecP[1]+vec[1];
+    // function dydx(vX, vY,pX,pY)
+    // {
+    //   return(pX+vX);
+    //   return(pY+vY);
+    // }
+    // function rungeKutta(x0, y0, x, h)
+    // {
+     
+    // // Count number of iterations using
+    // // step size or step height h
+    // let n = parseInt((x - x0) / h, 10);
+ 
+    // let k1, k2, k3, k4, k5;
+ 
+    // // Iterate for number of iterations
+    // let y = y0;
+    // for(let i = 1; i <= n; i++)
+    // {
+         
+    //     // Apply Runge Kutta Formulas to find
+    //     // next value of y
+    //     k1 = h * dydx(x0, y);
+    //     k2 = h * dydx(x0 + 0.5 * h, y + 0.5 * k1);
+    //     k3 = h * dydx(x0 + 0.5 * h, y + 0.5 * k2);
+    //     k4 = h * dydx(x0 + h, y + k3);
+ 
+    //     // Update next value of y
+    //     y = y + (1 / 6) * (k1 + 2 * k2 +
+    //                         2 * k3 + k4);;
+ 
+    //     // Update next value of x
+    //     x0 = x0 + h;
+    // }
+    // return y.toFixed(6);
+    // }
+    
+        
+    //console.log("test"+upS[0]);
+    console.log("test"+vecP[0]+vecV[0]);
+    console.log("test"+upS[0]);
+
+
+
+
 
     this.velocity = this.velocity.add(this.acceleration);
-    this.positionI = this.position.add(this.velocity);
+    this.positionI = this.position.add(this.velocity);//.multiply(this.h);
     //console.log(this.positionI);
-    // this.k1 = this.position.add(this.velocity).multiply(this.h);
-    // console.log(this.k1);
-    // this.k2 = this.position.add(this.velocity.add(this.h.subtract(this.half))).add(this.k1.subtract(this.half)).multiply(this.h);
-    // this.k3 = this.position.add(this.velocity.add(this.h.subtract(this.half))).add(this.k2.subtract(this.half)).multiply(this.h);
-    // this.k4 = this.position.add(this.velocity.add(this.h)).add(this.k3).multiply(this.h);
-    // this.bun = this.k1.add(this.k2.multiply(this.two)).add(this.k3.multiply(this.two)).add(this.k4).multiply(this.perSix);
+    
+    // k1 = (this.position.add(this.velocity)).multiply(this.h);
+    // this.k1.copy(k1);
+    // console.log("k1"+this.k1);
+    // // k2 = positiont.add(k1.divide(this.two)).add(velocityt2).add(this.h.divide(this.two)).multiply(this.h);
+    // console.log("k2"+k2);
+    // k3 = positiont.add(k2.divide(this.two)).add(velocityt).add(this.h.divide(this.two)).multiply(this.h);
+    // k4 = positiont.add(k3).add(velocityt).add(this.h).multiply(this.h);
+    // this.bun = k1.add(k2.multiply(this.two)).add(k3.multiply(this.two)).add(k4).divide(this.Six);
     // this.positionI = this.position.add(this.bun);
-    // //console.log(this.k1);
+    // //console.log(this.positionI)
+    // console.log(this.position);
+    // console.log(this.velocity);
+    // this.k1 = this.position.add(this.velocity).multiply(this.h);
+    // this.k2 = this.position.add(this.k1.divide(this.two)).add(this.velocity).add(this.h.divide(this.two)).multiply(this.h);
+    // this.k3 = this.position.add(this.k2.divide(this.two)).add(this.velocity).add(this.h.divide(this.two)).multiply(this.h);
+    // this.k4 = this.position.add(this.k3).add(this.velocity).add(this.h).multiply(this.h);
+    //console.log(this.position);
+
+    ////////////////////////////////////////////////
+    // this.k1 = this.k1.add(u(this.position,this.velocity)).multiply(h);
+    // console.log("k1"+this.k1);
+    // this.k2 = this.k2.add(u(this.position.add(this.k1.divide(two)),this.velocity.add(h.divide(two)))).multiply(h);
+    // console.log("k2"+this.k2);
+    // // this.k3 = this.k3.add(u(this.position.add(this.k2.divide(this.two)),this.velocity.add(this.h.divide(this.two)))).multiply(this.h);
+    // console.log("k3"+this.k3);
+    // this.k4 = this.k4.add(u(this.position.add(this.k3),this.velocity.add(this.h))).multiply(this.h);
+    // console.log("k4"+this.k4);
+    // this.bun = this.k1.add(this.k2.multiply(this.two)).add(this.k3.multiply(this.two)).add(this.k4).divide(this.Six);
+    // console.log("bundle="+this.bun)
+    // this.positionI = this.position.add(this.bun);
+    /////////////////////////////////////////////////////
+    
+    // console.log("p"+this.positionI);
+    // // this.velocity.add(this.h);
+    // console.log(this.positionI);
+    //console.log(this.k1);
     // // this.positionI = this.position.add()
     // var test = new Victor();
     // var u = new Victor(1,3);
@@ -449,9 +548,12 @@ class Boid {
     // k4 = this.position.add(this.velocity.add(0.1)).multiply(k3/2).multiply(0.1);
     // this.position = this.position + 1/6*(k1+(2*k2)+(2*k3)+k4);
    
-    function rungeKutta(){
+    // function rungeKutta(){
+    // }
+    // Loop through behaviors to apply forces
 
-    }
+    this.flock();
+
 
     // Collision detection if enabled
     //console.log(this.position)
@@ -728,7 +830,8 @@ class Boid {
     
     //draw(canvas,rr.x,rr.y,this.velocity.x,this.velocity.y,1,sudut2,sudut1,this.color);
 
-    draw(canvas,rr.x,rr.y,vr.x,vr.y,1,sudut2,sudut1,this.color);
+    draw(canvas,rr.x,rr.y,vr.x,vr.y,1,sudut1,sudut2,this.color);
+    console.log(rr.x+"and"+rr.y);
 
   }
 
