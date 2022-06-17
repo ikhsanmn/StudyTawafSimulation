@@ -403,16 +403,7 @@ class Boid {
   applyForce( force, coefficient ) {
     if ( ! coefficient ) { var coefficient = 1; }
     force.divide({x:coefficient,y:coefficient});
-    //var t =0;
-    // var h =0.5;
-    // var k1,k2,k3,k4;
-    // this.acceleration.add(force)
-    // this.velocity.add(this.acceleration);
     this.velocity.add(force);
-    // write function runge kutta  on this
-    //this.velocity
-    // t=+t+1
-    //t+=1
     this.velocity.limitMagnitude( this.maxSpeed );
   }
 
@@ -496,6 +487,20 @@ class Boid {
     this.velocity = this.velocity.add(this.acceleration);
     this.positionI = this.position.add(this.velocity);//.multiply(this.h);
     //console.log(this.positionI);
+
+    function rk4(x,v,a,h){
+      var x1 = x;
+      var v1 = v;
+      
+      
+      var k1 = x1.add(v1);
+      var k2 = x1.add(this.h.divide(this.two)).add(k1.add(this.h.divide(this.two)).multiply(this.h));
+      var k3 = x1.add(this.h.divide(this.two)).add(k2.add(this.h.divide(this.two)).multiply(this.h));
+      var k4 = x1.add(this.h).add(k3.multiply(this.h));
+      var bun = k1.add(k2.multiply(this.two)).add(k3.multiply(this.two)).add(k4).multiply(this.h);
+
+      var vN = x1.add(bun.multiply(this.h).divide(this.Six))
+    }
     
     // k1 = (this.position.add(this.velocity)).multiply(this.h);
     // this.k1.copy(k1);
