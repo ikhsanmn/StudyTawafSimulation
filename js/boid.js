@@ -484,23 +484,41 @@ class Boid {
 
 
 
-    this.velocity = this.velocity.add(this.acceleration);
-    this.positionI = this.position.add(this.velocity);//.multiply(this.h);
-    //console.log(this.positionI);
+    // this.velocity = this.velocity.add(this.acceleration);
+    // this.positionI = this.position.add(this.velocity);//.multiply(this.h);
+    // //console.log(this.positionI);
 
-    function rk4(x,v,a,h){
+    function rk4(x,v){
       var x1 = x;
       var v1 = v;
+      //var h1 = h;
       
-      
-      var k1 = x1.add(v1);
-      var k2 = x1.add(this.h.divide(this.two)).add(k1.add(this.h.divide(this.two)).multiply(this.h));
-      var k3 = x1.add(this.h.divide(this.two)).add(k2.add(this.h.divide(this.two)).multiply(this.h));
-      var k4 = x1.add(this.h).add(k3.multiply(this.h));
-      var bun = k1.add(k2.multiply(this.two)).add(k3.multiply(this.two)).add(k4).multiply(this.h);
+      var two = new Victor(2,2);
+      var h = new Victor(0.5,0.5);
+      var Six = new Victor(6,6);
 
-      var vN = x1.add(bun.multiply(this.h).divide(this.Six))
+      function f(x,v){
+        x.clone().add(v);
+      }
+      
+      var k1 = x1.clone().add(v1).multiply(h);
+      console.log("k1:"+k1);
+
+      var k2 = v1.clone().add(h.clone().divide(two)).add(x1).add(k1.clone().add(h.clone().divide(two)).multiply(h));
+      var k3 = v1.clone().add(h.clone().divide(two)).add(x1).add(k2.clone().add(h.clone().divide(two)).multiply(h));
+      var k4 = v1.clone().add(h).add(x1).add(k3.clone().multiply(h));
+      
+      var bun = k1.clone().add(k2.clone().multiply(two)).add(k3.clone().multiply(two)).add(k4).multiply(h).divide(Six);
+      //var bun = k1.clone().add(k2.clone().multiply(two)).add(k3.clone().multiply(two)).add(k4).multiply(h);
+      //var vN = x1.clone().add(bun.clone().multiply(h).divide(Six));
+      var vN = bun
+      return(vN);
     }
+
+    //rk4(this.position,this.velocity,this.h);
+    console.log("apakah ini:"+rk4(this.position,this.velocity));
+    this.positionI = this.positionI.add(rk4(this.position,this.velocity));
+
     
     // k1 = (this.position.add(this.velocity)).multiply(this.h);
     // this.k1.copy(k1);
