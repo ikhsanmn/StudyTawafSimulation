@@ -486,8 +486,8 @@ class Boid {
 
     // this.velocity = this.velocity.add(this.acceleration);
     // this.positionI = this.position.add(this.velocity);//.multiply(this.h);
-    // //console.log(this.positionI);
-
+    //console.log(this.positionI);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function rk4(x,v){
       var x1 = x;
       var v1 = v;
@@ -497,29 +497,31 @@ class Boid {
       var h = new Victor(0.5,0.5);
       var Six = new Victor(6,6);
 
-      function f(x,v){
-        x.clone().add(v);
+      function f(x0,v0){
+        x0.add(v0);
       }
-      
-      var k1 = x1.clone().add(v1).multiply(h);
-      console.log("k1:"+k1);
+      console.log("TEST"+f(x1.clone(),v1.clone()));
+      var k1 = f(x1.clone(),v1.clone()).multiply(h);
+      //console.log("k1:"+k1);
 
-      var k2 = v1.clone().add(h.clone().divide(two)).add(x1).add(k1.clone().add(h.clone().divide(two)).multiply(h));
-      var k3 = v1.clone().add(h.clone().divide(two)).add(x1).add(k2.clone().add(h.clone().divide(two)).multiply(h));
-      var k4 = v1.clone().add(h).add(x1).add(k3.clone().multiply(h));
+      var k2 = f(x1.clone().add(k1.clone().divide(two)),v1.clone().add(h.clone().divide(two))).multiply(h);
+      var k3 = f(x1.clone().add(k2.clone().divide(two)),v1.clone().add(h.clone().divide(two))).multiply(h);
+      var k4 = f(x1.clone().add(k3),v1.clone.add(h)).multiply(h);
       
       var bun = k1.clone().add(k2.clone().multiply(two)).add(k3.clone().multiply(two)).add(k4).multiply(h).divide(Six);
       //var bun = k1.clone().add(k2.clone().multiply(two)).add(k3.clone().multiply(two)).add(k4).multiply(h);
       //var vN = x1.clone().add(bun.clone().multiply(h).divide(Six));
       var vN = bun
+      console.log("V"+vN);
       return(vN);
     }
 
-    //rk4(this.position,this.velocity,this.h);
-    console.log("apakah ini:"+rk4(this.position,this.velocity));
-    this.positionI = this.positionI.add(rk4(this.position,this.velocity));
-
-    
+    //rk4(this.position,this.velocity);
+    //console.log("apakah ini:"+rk4(this.position,this.velocity));
+    // this.velocity.add(this.h)
+    // this.positionI = this.positionI.add(rk4(this.position,this.velocity));
+    // console.log("POS"+this.positionI);
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // k1 = (this.position.add(this.velocity)).multiply(this.h);
     // this.k1.copy(k1);
     // console.log("k1"+this.k1);
@@ -541,17 +543,27 @@ class Boid {
     ////////////////////////////////////////////////
     // this.k1 = this.k1.add(u(this.position,this.velocity)).multiply(h);
     // console.log("k1"+this.k1);
-    // this.k2 = this.k2.add(u(this.position.add(this.k1.divide(two)),this.velocity.add(h.divide(two)))).multiply(h);
+    // this.k2 = this.k2.add(u(this.position.add(this.k1.clone().divide(two)),this.velocity.add(h.divide(two)))).multiply(h);
     // console.log("k2"+this.k2);
     // // this.k3 = this.k3.add(u(this.position.add(this.k2.divide(this.two)),this.velocity.add(this.h.divide(this.two)))).multiply(this.h);
     // console.log("k3"+this.k3);
-    // this.k4 = this.k4.add(u(this.position.add(this.k3),this.velocity.add(this.h))).multiply(this.h);
+    // this.k4 = this.k4.add(u(this.position.add(this.k3.clone()),this.velocity.add(this.h))).multiply(this.h);
     // console.log("k4"+this.k4);
-    // this.bun = this.k1.add(this.k2.multiply(this.two)).add(this.k3.multiply(this.two)).add(this.k4).divide(this.Six);
+    // this.bun = this.k1.clone().add(this.k2.clone().multiply(this.two)).add(this.k3.clone().multiply(this.two)).add(this.k4.clone()).divide(this.Six);
     // console.log("bundle="+this.bun)
     // this.positionI = this.position.add(this.bun);
-    /////////////////////////////////////////////////////
-    
+    ///////////////////////////////////////////////////
+    // ///////////////////////////////////////////////////
+    // this.k1 = u(this.position.clone(),this.velocity.clone()).multiply(this.h);
+    // console.log("k1"+this.k1);
+    // this.k2 = u(this.position.clone().add(this.k1.clone().divide(this.two)),this.velocity.clone().add(this.h.clone().divide(this.two))).multiply(this.h);
+    // this.k3 = u(this.position.clone().add(this.k2.clone().divide(this.two)),this.velocity.clone().add(this.h.clone().divide(this.two))).multiply(this.h);
+    // this.k4 = u(this.position.clone().add(this.k3.clone()),this.velocity.clone().add(this.h)).multiply(this.h);
+
+    // this.bun = this.k1.clone().add(this.k2.clone().divide(two)).add(this.k3.clone().divide(two)).add(this.k4.clone()).divide(this.Six);
+    // console.log("test"+bun);
+    // this.positionI = this.position.add(this.bun);
+    // ////////////////////////////////////////////////////////
     // console.log("p"+this.positionI);
     // // this.velocity.add(this.h);
     // console.log(this.positionI);
@@ -815,25 +827,13 @@ class Boid {
     var rr = transform({x:this.positionI.x, y:this.positionI.y}); // tambahan ikhsan transformasi
     var theta = -1*Math.atan2(this.velocity.y,this.velocity.x); + Math.PI /2;
     var vr = transform({x:this.velocity.x, y:this.velocity.y}); // tambahan ikhsan transformasi
-    ///edit dits for different boids
-    // let x =arguments[0];
-    // let y =arguments[1];
-    // let radius=arguments[2];
-    // let degrees1=arguments[3];
-    // let degress2=arguments[4];
+
     let r = this.radius;
     let sudut1=Math.PI*(0);
     let sudut2=Math.PI*((2/3)-(1/3));
     //let theta =-1*Math.atan2(this.velocity.x,this.velocity.y) + Math.PI /2;
     c.save();
     c.beginPath();
-    // c.translate(rr.x,rr.y);
-    // //c.rotate(theta);
-    // c.moveTo(0,-r*2);
-    // c.lineTo(r,r*2);
-    // c.lineTo(-r,r*2);
-    // c.lineTo(0,-r*2);
-    
 
 
     c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
@@ -886,7 +886,7 @@ class Boid {
     //this.transform();// tambahan ikhsan
     var sudut1=Math.PI*(0);
     var sudut2=Math.PI*((2/3)-(1/3));
-    //this.draw(rr.x,rr.y,3,sudut1,sudut2);
+
     this.draw();
     ///draw all boundary except kaaba
     this.startLine();
@@ -895,11 +895,7 @@ class Boid {
     ///
     this.nextPosition();
     c.beginPath();
-    //transform the position 
-    // var rr = transform({x:this.position.x, y:this.position.y}); // tambahan ikhsan transformasi
-    // c.arc(rr.x, rr.y, this.radius, 0, Math.PI * 2);
-    // c.fillStyle = this.color;
-    // c.fill();
+
     c.closePath();
 
     //this.draw(); //awalnya disini
