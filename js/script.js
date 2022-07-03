@@ -148,6 +148,9 @@ var mouseSeek = false;
 var collisions = false;
 
 /*---- How much Boids ----*///120
+var allBoids = 100;//1000;
+var numAllBoids = allBoids;
+
 var minBoids = 60;//1000;
 var numBoids = minBoids;
 
@@ -156,12 +159,6 @@ var numAgBoids = agroBoids;
 
 var blackBoids = 20;//20
 var numBlBoids =blackBoids;
-// var numBoids = Math.sqrt(canvas.width * canvas.height) / 2;
-// if ( numBoids > maxBoids ) {
-//   numBoids = maxBoids;
-// } else if ( numBoids < minBoids ) {
-//   numBoids = minBoids;
-// }
 
 // Set possible radii  based on screen size
 var radius;
@@ -513,6 +510,20 @@ function drawWalls(id,surfs,color){
       }
       cx.stroke();
     }
+    c.strokeStyle = "#ff0000";
+    c.beginPath();
+    // c.moveTo(center.x-50,center.y-50);
+    // c.lineTo(center.x,center.y);
+    c.moveTo(center.x,center.y);
+    c.lineTo(1020,820);
+    c.moveTo(center.x-10,center.y);
+    c.lineTo(988,820);
+    c.moveTo(center.x,center.y-10);
+    c.lineTo(1050,820);
+    //c.fillStyle = "#ff0000";
+    c.fill();
+    c.stroke();
+  
 }
 // Define world coordinate
   var xmin = 0;//-1*(size.width/2);//0//-1*(size.width/2);//360
@@ -584,15 +595,7 @@ function animate() {
   }
 }
 
-console.log("test pos draw walls"+surf.p[0].x );
-console.log("test pos draw walls"+surf );
-console.log("test pos draw walls"+surf.p[1].x );
 
-console.log("test pos draw walls"+wallsKaaba );
-console.log("test pos draw walls1"+wallsKaaba[0].p[0] );
-
-console.log(surf.p[0].x );
-console.log(surf);
 function clear(){
   var ca = arguments[0];
   var ctx = ca.getContext("2d");
@@ -678,6 +681,14 @@ agressiveBoids();
 slowBoids();
 startAnimating(60);
 }
+
+// var buttonStart2 = document.getElementById('Start2');
+// buttonStart.onclick = function(){
+// //Initalize program
+// var id = event.target.id;
+// createBoids();
+// startAnimating(60);
+// }
 
 
 var buttonStop = document.getElementById('Stop');

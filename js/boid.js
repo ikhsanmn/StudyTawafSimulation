@@ -288,7 +288,7 @@ class Boid {
 
  
   align( boids ) {
-    var neighborDist = 25;//50
+    var neighborDist = 50;//50
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
@@ -313,7 +313,7 @@ class Boid {
 
 
   cohesion( boids ) {
-    var neighborDist = 25;//50
+    var neighborDist = 50;//50
     var sum = new Victor();
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
@@ -484,8 +484,8 @@ class Boid {
 
 
 
-    // this.velocity = this.velocity.add(this.acceleration);
-    // this.positionI = this.position.add(this.velocity);//.multiply(this.h);
+    this.velocity = this.velocity.add(this.acceleration);
+    this.positionI = this.position.add(this.velocity);//.multiply(this.h);
     //console.log(this.positionI);
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function rk4(x,v){
@@ -889,7 +889,7 @@ class Boid {
 
     this.draw();
     ///draw all boundary except kaaba
-    this.startLine();
+    //this.startLine();
     
     //this.circularPath();
     ///
