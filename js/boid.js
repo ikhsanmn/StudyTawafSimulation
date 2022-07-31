@@ -288,7 +288,7 @@ class Boid {
 
  
   align( boids ) {
-    var neighborDist = 50;//50
+    var neighborDist = 25;//50
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
@@ -313,7 +313,7 @@ class Boid {
 
 
   cohesion( boids ) {
-    var neighborDist = 50;//50
+    var neighborDist = 25;//50
     var sum = new Victor();
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
@@ -477,8 +477,8 @@ class Boid {
     
         
     //console.log("test"+upS[0]);
-    console.log("test"+vecP[0]+vecV[0]);
-    console.log("test"+upS[0]);
+    // console.log("test"+vecP[0]+vecV[0]);
+    // console.log("test"+upS[0]);
 
 
 
@@ -827,6 +827,7 @@ class Boid {
     var rr = transform({x:this.positionI.x, y:this.positionI.y}); // tambahan ikhsan transformasi
     var theta = -1*Math.atan2(this.velocity.y,this.velocity.x); + Math.PI /2;
     var vr = transform({x:this.velocity.x, y:this.velocity.y}); // tambahan ikhsan transformasi
+    var t,deltat;
 
     let r = this.radius;
     let sudut1=Math.PI*(0);
@@ -854,7 +855,9 @@ class Boid {
     //draw(canvas,rr.x,rr.y,this.velocity.x,this.velocity.y,1,sudut2,sudut1,this.color);
 
     draw(canvas,rr.x,rr.y,vr.x,vr.y,1,sudut1,sudut2,this.color);
-    console.log(rr.x+"and"+rr.y);
+    t=+deltat
+
+    //console.log(rr.x+"and"+rr.y);
 
   }
 

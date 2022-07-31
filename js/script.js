@@ -582,18 +582,64 @@ function animate() {
 
     function simulate() {
       c.clearRect(0, 0, canvas.width, canvas.height);
-
+      var arr=[]; //y
+      var arr1=[];//x
+      var t=0,dt=0.1;
      // t++
       // Update all boids
+      if(t!=60){
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
         drawWalls("walls", wallsKaaba, "#f00");// 
         //drawWalls("walls", sides, "#f00");//
+        arr.push(boids[i].velocity.length());
+        
       }
+      arr1.push(t);
+      t+=dt
+      }
+      console.log(arr);
+      console.log(arr1);
+
     }
     simulate();
+
+    function openGraph(){
+      var myWindow = window.open("", "myWindow", "width=200,height=100");   // Opens a new window
+      myWindow.document.write("<p>This is 'myWindow'</p>");   // Text in the new window
+      let manyBoid;
+      for (var i = 0; i < boids.length; i++ ) {
+  
+       boids[i].update();
+       drawWalls("walls", wallsKaaba, "#f00");// 
+      //drawWalls("walls", sides, "#f00");//
+     }
+     var arr=[]; //y
+     var arr1=[];//x
+    // for (var i = 0; i < boids.length; i++) {
+  
+    //   var dist = this.position.distance(boids[i].position);
+    //   if ( dist > 0 && dist < neighborDist ) {
+    //     sum.add(boids[i].velocity);
+    //     t+=dt;
+    //   }
+    // }
+     var graph1={
+      x: arr1,
+      y: arr,
+      mode: 'lines-makers',
+      name: 'dots'
+      };
+      var data1 =[graph1];
+      var gambar1= {title:"Data yang diperoleh"};
+      Plotly.newPlot("area3", data1, gambar1,"");
+
+      console.log("kecepatan terminal total: " + vtotal);
+     }
+
   }
 }
+
 
 
 function clear(){
