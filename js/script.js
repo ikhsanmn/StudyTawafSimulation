@@ -600,6 +600,8 @@ function animate() {
       }
       console.log(arr);
       console.log(arr1);
+      var myWindow = window.open("", "myWindow", "width=200,height=100");   // Opens a new window
+      myWindow.document.write("<p>This is 'myWindow'</p>");   // Text in the new window
 
     }
     simulate();
