@@ -584,6 +584,8 @@ function animate() {
       c.clearRect(0, 0, canvas.width, canvas.height);
       var arr=[]; //y
       var arr1=[];//x
+      var verR;
+      var arrt=[];
       var t=0,dt=0.1;
      // t++
       // Update all boids
@@ -592,16 +594,45 @@ function animate() {
         boids[i].update();
         drawWalls("walls", wallsKaaba, "#f00");// 
         //drawWalls("walls", sides, "#f00");//
-        arr.push(boids[i].velocity.length());
-        
+        arr.push(boids[i].velocity.length());  
       }
       arr1.push(t);
       t+=dt
       }
       console.log(arr);
+      console.log(
+      arr.reduce((a, b) => a + b, 0)
+      )
+      verR = arr.reduce((a, b) => a + b, 0);
+      //verR1 = verR/boids[i].length();
+      verR1 = verR/numAllBoids;
+      console.log(verR1);  
       console.log(arr1);
+      arrt.push(verR1);
+      console.log(arrt);
+      var tes= [1,2,3,4,5];
+      var testwo= [6,7,4,3,1];
+      var graph1={
+      x: tes,
+      y: testwo,
+      mode: 'lines-makers',
+      name: 'dots'
+      };
+      var data1 =[graph1];
+      var gambar1= {title:"Data yang diperoleh"};
+      // Plotly.newPlot("area3", data1, gambar1,"");
+      //console.log("kecepatan terminal total: " + vtotal);
+
       var myWindow = window.open("", "myWindow", "width=200,height=100");   // Opens a new window
-      myWindow.document.write("<p>This is 'myWindow'</p>");   // Text in the new window
+      //myWindow.document.write("<p>This is 'myWindow'</p>");   // Text in the new window
+      // myWindow.document.write("<div id=area3></div>");
+      // myWindow.document.("<div id=area3></div>");
+      myWindow.document.createElement("div");
+      const graph = document.createElement("div");
+      graph.setAttribute('id', 'area3');
+      // myWindow.r.setAttribute("id","area3");
+      myWindow.document.body.appendChild(graph);
+      myWindow.document.write(Plotly.newPlot("area3", data1, gambar1,""));   // Text in the new window
 
     }
     simulate();
