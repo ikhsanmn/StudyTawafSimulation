@@ -216,6 +216,8 @@ var maxForceAggro = 0.4;
 // Create Boids Array
 var boids = [];
 
+// Other 
+var trigger = true;
 /**
  * Create Boids Array
  *
@@ -587,29 +589,36 @@ function animate() {
       var verR;
       var arrt=[];
       var t=0,dt=0.1;
+      //var id = setInterval(test,60);
      // t++
       // Update all boids
-      if(t!=60){
+      function test(){
+      if(trigger== true){
       for (var i = 0; i < boids.length; i++ ) {
         boids[i].update();
         drawWalls("walls", wallsKaaba, "#f00");// 
         //drawWalls("walls", sides, "#f00");//
         arr.push(boids[i].velocity.length());  
       }
-      arr1.push(t);
-      t+=dt
       }
-      console.log(arr);
-      console.log(
-      arr.reduce((a, b) => a + b, 0)
-      )
+      arr1.push(t);
+      t++
+      t+=dt
+      console.log(t);
+      }
+      test();
+      //arr1.push(t);
+      //console.log(arr);
+      // console.log(
+      // arr.reduce((a, b) => a + b, 0)
+      // )
       verR = arr.reduce((a, b) => a + b, 0);
       //verR1 = verR/boids[i].length();
       verR1 = verR/numAllBoids;
-      console.log(verR1);  
-      console.log(arr1);
+      //console.log(verR1);  
+      //console.log(arr1);
       arrt.push(verR1);
-      console.log(arrt);
+      //console.log(arrt);
       var tes= [1,2,3,4,5];
       var testwo= [6,7,4,3,1];
       var graph1={
@@ -632,8 +641,8 @@ function animate() {
       graph.setAttribute('id', 'area3');
       // myWindow.r.setAttribute("id","area3");
       myWindow.document.body.appendChild(graph);
-      myWindow.document.write(Plotly.newPlot("area3", data1, gambar1,""));   // Text in the new window
-
+      //myWindow.document.write(Plotly.newPlot("area3", data1, gambar1,""));   // Text in the new window
+      //Plotly.newPlot("home", data1, gambar1,"")
     }
     simulate();
 
