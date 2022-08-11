@@ -557,8 +557,23 @@ function transform(r) {
  * Setup and call animation function
  *
  */
-// var t=0,dt=1;
+  var t=0,dt=1;
+  //var arr=[]; //y
+  //var arr1=[];//x
+     
+  var arrt=[];
+  var arr =[];
 
+  var arry=[];
+  var arry1=[];
+  var arry2=[];
+  var arry3=[];
+  var arry4=[];
+  var arry5=[];
+  
+  var Vb1,Vb2,Vb3,Vb4,Vb5;
+
+  var verR1;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -581,32 +596,43 @@ function animate() {
       // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
       then = now - (elapsed % fpsInterval);
       // Drawing Code
-
+      t+=dt
     function simulate() {
       c.clearRect(0, 0, canvas.width, canvas.height);
       var arr=[]; //y
       var arr1=[];//x
+      var arr2=[];
       var verR;
-      var arrt=[];
-      var t=0,dt=0.1;
-      //var id = setInterval(test,60);
-     // t++
       // Update all boids
-      function test(){
+    function test(){
       if(trigger== true){
-      for (var i = 0; i < boids.length; i++ ) {
+        for (var i = 0; i < boids.length; i++ ) {
+        //arr.push(boids[i].velocity.length());
         boids[i].update();
+        arr.push(boids[i].velocity.length());
+        arr2.push(boids[i].position);
         drawWalls("walls", wallsKaaba, "#f00");// 
         //drawWalls("walls", sides, "#f00");//
-        arr.push(boids[i].velocity.length());  
+          }
+    }
+      console.log(arr2);
+      //console.log(n[1].x);
+
+
+      //arr1.push(t);
+      // t+=dt
+      console.log(arr1);
       }
-      }
-      arr1.push(t);
-      t++
-      t+=dt
-      console.log(t);
-      }
+      console.log(arr1);
       test();
+      console.log(arr[1]);
+      Vb1 = arr[99];
+      Vb2 = arr[98];
+      Vb3 = arr[97];
+      Vb4 = arr[96];
+      Vb5 = arr[95];
+
+      console.log(Vb1);
       //arr1.push(t);
       //console.log(arr);
       // console.log(
@@ -615,72 +641,177 @@ function animate() {
       verR = arr.reduce((a, b) => a + b, 0);
       //verR1 = verR/boids[i].length();
       verR1 = verR/numAllBoids;
+      const verR2 = verR1
       //console.log(verR1);  
       //console.log(arr1);
-      arrt.push(verR1);
-      //console.log(arrt);
-      var tes= [1,2,3,4,5];
-      var testwo= [6,7,4,3,1];
-      var graph1={
-      x: tes,
-      y: testwo,
-      mode: 'lines-makers',
-      name: 'dots'
-      };
-      var data1 =[graph1];
-      var gambar1= {title:"Data yang diperoleh"};
-      // Plotly.newPlot("area3", data1, gambar1,"");
-      //console.log("kecepatan terminal total: " + vtotal);
+      //console.log(verR2);
+      // for(let i = 0; i < 2; i++  ){
+        
+      //   arrt.push(verR2);
+      // }
+      
+      
+      // //arrt.push(verR2);
+      // console.log(arrt);
+      //
+      const N = 10, t_0 = 0, t_1 = 1, y_0 = 0
+      const h = (t_1 - t_0) / N  //time step size
 
-      var myWindow = window.open("", "myWindow", "width=200,height=100");   // Opens a new window
-      //myWindow.document.write("<p>This is 'myWindow'</p>");   // Text in the new window
-      // myWindow.document.write("<div id=area3></div>");
-      // myWindow.document.("<div id=area3></div>");
-      myWindow.document.createElement("div");
-      const graph = document.createElement("div");
-      graph.setAttribute('id', 'area3');
-      // myWindow.r.setAttribute("id","area3");
-      myWindow.document.body.appendChild(graph);
-      //myWindow.document.write(Plotly.newPlot("area3", data1, gambar1,""));   // Text in the new window
-      //Plotly.newPlot("home", data1, gambar1,"")
+      //var ts = Array.from(Array(N+1), (_, k) => k * h + t_0)
+      //var ys = Array(N+1).fill(0)  //empty array for the results
+      var ts = [];
+      //var ys = Array.from(verR1+1).fill(0)
+      var ys =[];
+      ys[0] = y_0  //initial conditions
+
+      function f(v,ts){
+        var u,v,ts;
+        u=v*t;
+        return u;
+      }
+      var resolution = 100;
+      var y=[],s=[],yts;
+      for (let i = 0; i < resolution; i++) {
+         ts[i]=i;
+         ys[i]=verR1;
+         const k1 = f(ts[i], ys[i])
+
+         const s1 = ys[i] + k1 * h/2
+         const k2 = f(ts[i] + h/2, s1)
+
+         const s2 = ys[i] + k2 * h/2
+         const k3 = f(ts[i] + h/2, s2) 
+
+         const s3 = ys[i] + k3 * h
+         const k4 = f(ts[i] + h, s3) // f(t + h, y_n + k3*h)
+         ys[i + 1] = ys[i] + (k1/6 + k2/3 + k3/3 + k4/6) * h
+         //yts.copy(ys[i+1]);
+         //y.push(yts.clone());
+         y.push(ys[i+1])
+         //console.log(ys[i+1]);
+         s.push(ts[i]);
+           
+      }
+      console.log(y);
+      console.log(s);
+      //
+      //console.log(arrt);
+      // var tes= [1,2,3,4,5];
+      // var testwo= [6,7,4,3,1];
+     
+    //openGraph(s,y);
     }
     simulate();
 
-    function openGraph(){
-      var myWindow = window.open("", "myWindow", "width=200,height=100");   // Opens a new window
-      myWindow.document.write("<p>This is 'myWindow'</p>");   // Text in the new window
-      let manyBoid;
-      for (var i = 0; i < boids.length; i++ ) {
-  
-       boids[i].update();
-       drawWalls("walls", wallsKaaba, "#f00");// 
-      //drawWalls("walls", sides, "#f00");//
-     }
-     var arr=[]; //y
-     var arr1=[];//x
-    // for (var i = 0; i < boids.length; i++) {
-  
-    //   var dist = this.position.distance(boids[i].position);
-    //   if ( dist > 0 && dist < neighborDist ) {
-    //     sum.add(boids[i].velocity);
-    //     t+=dt;
-    //   }
-    // }
-     var graph1={
-      x: arr1,
-      y: arr,
-      mode: 'lines-makers',
-      name: 'dots'
+
+
+    function openGraph(tes,testwo1,testwo2,testwo3,testwo4,testwo5){
+      var tes;
+      var testwo;
+      var testwo1;
+      var testwo2;
+      var testwo3;
+      var testwo4;
+      var testwo5;
+      var graph1={
+      x: tes,
+      y: testwo1,
+      mode: 'lines+markers',
+      type: 'scatter',
+      name: 'dots1'
       };
-      var data1 =[graph1];
-      var gambar1= {title:"Data yang diperoleh"};
-      Plotly.newPlot("area3", data1, gambar1,"");
-
-      console.log("kecepatan terminal total: " + vtotal);
+      var graph2={
+      x: tes,
+      y: testwo2,
+      mode: 'lines+markers',
+      type: 'scatter',
+      name: 'dots2'
+      };
+      var graph3={
+      x: tes,
+      y: testwo3,
+      mode: 'lines+markers',
+      type: 'scatter',
+      name: 'dots3'
+      };
+      var graph4={
+      x: tes,
+      y: testwo4,
+      mode: 'lines+markers',
+      type: 'scatter',
+      name: 'dots4'
+      };
+      var graph5={
+      x: tes,
+      y: testwo5,
+      mode: 'lines+markers',
+      type: 'scatter',
+      name: 'dots5'
+      };
+      var data1 =[graph1,graph2,graph3,graph4,graph5];
+      var gambar1= {
+      title: {
+        text:'Grafik 1',
+        font: {
+        family: 'Courier New, monospace',
+        size: 24
+        },
+        xref: 'paper',
+        x: 0.05,
+      },
+      xaxis: {
+       title: {
+       text: 'T(waktu)',
+       font: {
+       family: 'Courier New, monospace',
+       size: 18,
+       color: '#7f7f7f'
+       }
+       },
+      },
+      yaxis: {
+       title: {
+       text: 'V(kecepatan)',
+       font: {
+       family: 'Courier New, monospace',
+       size: 18,
+       color: '#7f7f7f'
+       }
+       }
+      }
+      };
+     ;
+      // Opens a new window
+      var myWindow = window.open("", "myWindow", "width=1080,height=720");   
+      myWindow.document.createElement("div");
+      const graph = document.createElement("div");
+      graph.setAttribute('id', 'area3');
+      myWindow.document.body.appendChild(graph);
+      Plotly.newPlot(graph, data1, gambar1,"")
      }
-
   }
+  // console.log(y);
+  // console.log(s);
+arrt.push(t);
+//arry.push(verR1);
+arry1.push(Vb1);
+arry2.push(Vb2);
+arry3.push(Vb3);
+arry4.push(Vb4);
+arry5.push(Vb5);
+// console.log(arrt);
+ // console.log(arry);
+ // console.log(arry1);
+ // console.log(arry2);
+ // console.log(arry3);
+openGraph(arrt,arry1,arry2,arry3,arry4,arry5);
+
+   
 }
+// arrt.push(t);
+// arry.push(verR1);
+// console.log(arrt);
+// console.log(verR1);
 
 
 
@@ -1006,33 +1137,3 @@ function updateDiversity(value) {
     boids[i].color = colors[ i % value ];
   }
 }
-
-//////////// text area input//////////////
-function initParameters(){
-  var pars ="";
-  pars+="#Initialize\n";
-  pars+="Acceleration   : 0\n"; //0 adalah tanpa percepatan
-  pars+="Velocity     : 0.001\n";
-  pars+="Force  : 45\n";
-  pars+="AgentModel : 1000\n";
-  //listForce from dinda ada 3 cohhetion separation and align
-  pars+="Time_Out1  : 2000\n";
-  pars+="\n";
-
-  parameter=pars;
-
-  digital=5;
-}
-
-//create Element text area input
-taIn=document.createElement("textarea");
-with(taIn.style){
-  width="300px";
-  height="230px";
-  overflowY = "scroll";
-}
- console.log("center1"+center);
-console.log("center2"+"("+surf.center().x+","+surf.center().y+")");
-
-
-/*---- end Inputs ----*/
