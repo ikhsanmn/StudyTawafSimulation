@@ -573,6 +573,8 @@ function transform(r) {
   
   var Vb1,Vb2,Vb3,Vb4,Vb5;
 
+  var aB1,aB2;
+
   var verR1;
 
 function animate() {
@@ -602,6 +604,7 @@ function animate() {
       var arr=[]; //y
       var arr1=[];//x
       var arr2=[];
+      var arr3=[];
       var verR;
       // Update all boids
     function test(){
@@ -610,13 +613,16 @@ function animate() {
         //arr.push(boids[i].velocity.length());
         boids[i].update();
         arr.push(boids[i].velocity.length());
-        arr2.push(boids[i].position);
+        arr2.push(boids[i].position.x);
+        arr3.push(boids[i].position.y);
         drawWalls("walls", wallsKaaba, "#f00");// 
         //drawWalls("walls", sides, "#f00");//
           }
     }
       console.log(arr2);
+      console.log(arr3);
       //console.log(n[1].x);
+
 
 
       //arr1.push(t);
@@ -631,6 +637,12 @@ function animate() {
       Vb3 = arr[97];
       Vb4 = arr[96];
       Vb5 = arr[95];
+
+      aB1 =arr2;
+      aB2 =arr3;
+      console.log(aB1);
+
+
 
       console.log(Vb1);
       //arr1.push(t);
@@ -789,6 +801,59 @@ function animate() {
       myWindow.document.body.appendChild(graph);
       Plotly.newPlot(graph, data1, gambar1,"")
      }
+    function openGraph1(tes,testwo){
+      var tes;
+      var testwo;
+      
+      var graph1={
+      x: tes,
+      y: testwo,
+      mode: 'lines+markers',
+      type: 'scatter',
+      name: 'dots1'
+      };
+      
+      var data1 =[graph1];
+      var gambar1= {
+      title: {
+        text:'Grafik 1',
+        font: {
+        family: 'Courier New, monospace',
+        size: 24
+        },
+        xref: 'paper',
+        x: 0.05,
+      },
+      xaxis: {
+       title: {
+       text: 'T(waktu)',
+       font: {
+       family: 'Courier New, monospace',
+       size: 18,
+       color: '#7f7f7f'
+       }
+       },
+      },
+      yaxis: {
+       title: {
+       text: 'V(kecepatan)',
+       font: {
+       family: 'Courier New, monospace',
+       size: 18,
+       color: '#7f7f7f'
+       }
+       }
+      }
+      };
+     ;
+      // Opens a new window
+      var myWindow = window.open("", "myWindow", "width=1080,height=720");   
+      myWindow.document.createElement("div");
+      const graph = document.createElement("div");
+      graph.setAttribute('id', 'area3');
+      myWindow.document.body.appendChild(graph);
+      Plotly.newPlot(graph, data1, gambar1,"")
+     }
   }
   // console.log(y);
   // console.log(s);
@@ -804,7 +869,8 @@ arry5.push(Vb5);
  // console.log(arry1);
  // console.log(arry2);
  // console.log(arry3);
-openGraph(arrt,arry1,arry2,arry3,arry4,arry5);
+//openGraph(arrt,arry1,arry2,arry3,arry4,arry5);
+//openGraph1(aB1,aB2);
 
    
 }

@@ -288,7 +288,7 @@ class Boid {
 
  
   align( boids ) {
-    var neighborDist = 25;//50
+    var neighborDist = 50;//50
     var sum = new Victor();
     var steer = new Victor();
     var t = 0,dt=1;
@@ -313,7 +313,7 @@ class Boid {
 
 
   cohesion( boids ) {
-    var neighborDist = 25;//50
+    var neighborDist = 50;//50
     var sum = new Victor();
     var t = 0,dt=1;
     for (var i = 0; i < boids.length; i++) {
